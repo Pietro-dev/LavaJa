@@ -8,6 +8,7 @@ export const Menu:React.FC = ()=>{
                 <MenuItem href='/' label='Home'/>
                 <MenuItem href='/' label='Dashboard'/>
                 <MenuItem href='/consultas/servicos' label='Serviços'/>
+                <MenuItem href='/cadastros/lava-rapidos' label='Lava Rápidos'/>
                 <MenuItem href='/' label='Agenda'/>
                 <MenuItem href='/' label='Promoções'/>
                 <MenuItem href='/' label='Perfil'/>
