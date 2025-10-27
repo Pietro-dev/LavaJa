@@ -1,0 +1,1 @@
+export { useServicoService } from './Servico.Service'
