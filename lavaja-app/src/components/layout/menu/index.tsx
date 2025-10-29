@@ -2,15 +2,23 @@ import Link from 'next/link'
 
 export const Menu:React.FC = ()=>{
     return(
-        <aside className="menu column is-2 is-narrow-mobile is-fullheight section is-hidden-mobile">
-            <p className="menu-label is-hidden-touch">LavaJá</p>
+        <aside className="menu column is-fullheight" style={{ marginTop: '10px', marginLeft: '10px' }}>
+            <p className="menu-label is-hidden-touch">LavaJá - ADM</p>
+            <ul className="menu-list">
+                <MenuItem href='/consultas/servicos' label='Serviços'/>
+                <MenuItem href='/consultas/lava-rapidos' label='Lava Rápidos'/>
+                <MenuItem href='/cadastros/usuarios' label='Usuários'/>
+            </ul>
+            <p className="menu-label">Lava-Rápidos</p>
+            <ul className="menu-list">
+                <MenuItem href='/' label='Dashboard'/>
+                <MenuItem href='/consultas/servicos' label='Meus Serviços'/>
+                <MenuItem href='/' label='Perfil'/>
+            </ul>
+            <p className="menu-label">Usuários</p>
             <ul className="menu-list">
                 <MenuItem href='/' label='Home'/>
-                <MenuItem href='/' label='Dashboard'/>
-                <MenuItem href='/consultas/servicos' label='Serviços'/>
-                <MenuItem href='/cadastros/lava-rapidos' label='Lava Rápidos'/>
-                <MenuItem href='/' label='Agenda'/>
-                <MenuItem href='/' label='Promoções'/>
+                <MenuItem href='/' label='Meus agendamentos'/>
                 <MenuItem href='/' label='Perfil'/>
             </ul>
         </aside>

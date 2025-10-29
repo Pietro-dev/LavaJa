@@ -42,7 +42,6 @@ export const CadastroServicos: React.FC = ()=>{
     useEffect(() => {
         if(queryId){
             service.carregarServico(queryId).then(servicoEncontrado => {
-                console.log(servicoEncontrado)
                 setId(servicoEncontrado.id || '')
                 setDataCadastro(servicoEncontrado.dataCadastro || '')
                 setServico(servicoEncontrado.servico || '')

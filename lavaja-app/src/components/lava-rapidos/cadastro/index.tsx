@@ -3,15 +3,25 @@
 import { Layout } from 'components'
 import { LavaRapidoForm } from './form'
 import { LavaRapido } from 'app/models/lava-rapidos'
-import { use, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { useLavaRapidoService } from 'app/services'
 import { Alert } from 'components/common/message'
+
+import { useSearchParams } from 'next/navigation'
 
 export const CadastroLavaRapido: React.FC = () => {
 
     const [lavaRapido, setLavaRapido] = useState<LavaRapido>({})
     const [messages, setMessages] = useState<Array<Alert>>([])
     const service = useLavaRapidoService()
+    const searchParams = useSearchParams()
+    const queryId = searchParams.get('id')
+
+    useEffect(() => {
+        if(queryId){
+            service.carregarLavaRapido(queryId).then(setLavaRapido)
+        }
+    }, [queryId])
 
     const handleSubmit = (lavaRapido: LavaRapido) => {
         if(lavaRapido.id){

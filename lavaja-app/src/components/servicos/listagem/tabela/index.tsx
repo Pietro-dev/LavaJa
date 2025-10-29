@@ -19,7 +19,8 @@ export const TabelaServicos: React.FC<TabelaServicosProps> = ({
     onDelete
 }) => {
     return(
-        <table className="table is-striped is-hoverable is-fullwidth">
+        <div className="table-container">
+            <table className="table is-striped is-hoverable is-fullwidth">
             <thead>
                 <tr>
                     <th>Código</th>
@@ -34,6 +35,7 @@ export const TabelaServicos: React.FC<TabelaServicosProps> = ({
                 {servicos.map(servico => <ServicoRow onDelete={onDelete} onEdit={onEdit} key={servico.id} servico={servico}/>)}
             </tbody>
         </table>
+        </div>
     )
 }
 

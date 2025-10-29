@@ -30,12 +30,12 @@ export const ListagemServicos: React.FC = () => {
     const deletar = (servico:Servico) => {
         if (!servico.id)return
 
-    service.deletar(servico.id).then(response => {
-        setMessages([
-            { texto:"Produto excluído com sucesso!", tipo:"success", titulo:"Sucesso!" }
-        ])
-        const listaAlterada = lista?.filter(s => s.id !== servico.id)
-        setLista(listaAlterada)
+        service.deletar(servico.id).then(response => {
+            setMessages([
+                { texto:"Produto excluído com sucesso!", tipo:"success", titulo:"Sucesso!" }
+            ])
+            const listaAlterada = lista?.filter(s => s.id !== servico.id)
+            setLista(listaAlterada)
     })
     }
     

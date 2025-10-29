@@ -2,6 +2,7 @@ import { LavaRapido } from 'app/models/lava-rapidos'
 import { useFormik } from 'formik'
 import { Input, InputCnpj, InputTelefone } from 'components'
 import * as Yup from 'yup'
+import Link from 'next/link'
 
 
 
@@ -147,11 +148,11 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                         {formik.values.id ? "Atualizar" : "Salvar"}
                     </button>
                 </div>
-                {/* <div className="control">
-                    <Link href="/consultas/servicos">
+                <div className="control">
+                    <Link href="/consultas/lava-rapidos">
                         <button className="button">Voltar</button>
                     </Link>
-                </div> */}
+                </div>
             </div>
         </form>
     )
