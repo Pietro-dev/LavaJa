@@ -1,34 +1,41 @@
 import { InputHTMLAttributes } from "react"
 import { formatReal } from 'app/util/money'
+import { FormatUtils } from '@4us-dev/utils'
+
+const formatUtils = new FormatUtils
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement>{
     id: string
-    onChange?: (value:any) => void
     label: string
     columnClasses?: string
-    currency?: boolean
     error?: string
+    formatter?: (value: string) => string
 }
 
 export const Input: React.FC<InputProps> = ({
-    onChange,
     label,
     columnClasses,
     id,
-    currency,
     error,
+    formatter,
+    onChange,
     ...inputProps
 }:InputProps) => {
 
     const onInputChange = (event: any) => {
-        let value = event.target.value
+        const value = event.target.value
+        const name = event.target.name
 
-        if (value && currency) {
-            value = formatReal(value)
-        }
+        const formattedValue = (formatter && formatter(value as string)) || value
 
-        if (onChange) {
-            onChange(value)
+        if(onChange){
+            onChange({
+                ...event,
+                target:{
+                    name,
+                    value: formattedValue
+                }
+            })
         }
     }
 
@@ -44,5 +51,23 @@ export const Input: React.FC<InputProps> = ({
                 }
             </div>
         </div>
+    )
+}
+
+export const InputMoney: React.FC<InputProps> = (props:InputProps) => {
+    return (
+        <Input {...props} formatter={formatReal}/>
+    )
+}
+
+export const InputCnpj: React.FC<InputProps> = (props:InputProps) => {
+    return (
+        <Input {...props} formatter={formatUtils.formatCNPJ}/>
+    )
+}
+
+export const InputTelefone: React.FC<InputProps> = (props:InputProps) => {
+    return (
+        <Input {...props} formatter={formatUtils.formatPhone}/>
     )
 }

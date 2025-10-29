@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Layout } from 'components'
-import { Input, Message } from 'components'
+import { Input, InputMoney } from 'components'
 import { useServicoService } from 'app/services'
 import { Servico } from 'app/models/servicos'
 import { converterEmBigDecimal, formatReal } from 'app/util/money'
@@ -105,7 +105,7 @@ export const CadastroServicos: React.FC = ()=>{
                 </div>         
             }
             <Input 
-                onChange={setServico} 
+                onChange={e => setServico(e.target.value)} 
                 value={servico} 
                 label="Serviço:" 
                 id="servico" 
@@ -115,7 +115,7 @@ export const CadastroServicos: React.FC = ()=>{
                 error={errors.servico}
             />
             <Input 
-                onChange={setDescricao} 
+                onChange={e => setDescricao(e.target.value)} 
                 value={descricao} 
                 label="Breve Descição:" 
                 id="descricao" 
@@ -125,20 +125,19 @@ export const CadastroServicos: React.FC = ()=>{
                 error={errors.descricao}
             />
             <div className="field is-horizontal">
-                <Input 
-                    onChange={setValor} 
+                <InputMoney 
+                    onChange={e => setValor(e.target.value)} 
                     value={valor} 
                     label="Preço:" 
                     id="valor" 
                     columnClasses='is-half' 
                     type='text' 
-                    placeholder='1.000,00' 
-                    currency 
+                    placeholder='1.000,00'  
                     maxLength={16}
                     error={errors.valor}
                 />
                 <Input 
-                    onChange={setDuracao} 
+                    onChange={e => setDuracao(e.target.value)} 
                     value={duracao} 
                     label="Duração em minutos:" 
                     id="duracao" 

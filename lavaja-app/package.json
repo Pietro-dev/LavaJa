@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@4us-dev/utils": "^0.0.15",
     "axios": "^1.12.2",
     "bulma": "^1.0.4",
     "formik": "^2.4.6",
