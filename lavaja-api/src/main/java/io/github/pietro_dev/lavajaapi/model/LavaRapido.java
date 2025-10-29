@@ -1,7 +1,11 @@
 package io.github.pietro_dev.lavajaapi.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -18,13 +22,19 @@ public class LavaRapido {
     private String senha;
 
     @Column(name="data_cadastro")
-    private String dataCadastro;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataCadastro;
+
+    @PrePersist
+    public void prePersist(){
+        setDataCadastro(LocalDate.now());
+    }
 
     public LavaRapido(){
         super();
     }
 
-    public LavaRapido(Long id, String razaoSocial, String cnpj, String endereco, String telefone, String email, String senha, String dataCadastro) {
+    public LavaRapido(Long id, String razaoSocial, String cnpj, String endereco, String telefone, String email, String senha, LocalDate dataCadastro) {
         this.id = id;
         this.razaoSocial = razaoSocial;
         this.cnpj = cnpj;

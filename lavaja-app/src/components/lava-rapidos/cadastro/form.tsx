@@ -27,6 +27,7 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
     const formik = useFormik<LavaRapido>({
         initialValues: {...formScheme, ...lavaRapido},
         onSubmit,
+        enableReinitialize: true
     })
 
     return(

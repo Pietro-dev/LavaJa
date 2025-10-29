@@ -1,11 +1,14 @@
 package io.github.pietro_dev.lavajaapi.rest.lavarapidos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.pietro_dev.lavajaapi.model.LavaRapido;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class LavaRapidoFormRequest {
@@ -20,13 +23,14 @@ public class LavaRapidoFormRequest {
     private String senha;
 
     @Column(name="data_cadastro")
-    private String dataCadastro;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataCadastro;
 
     public LavaRapidoFormRequest() {
         super();
     }
 
-    public LavaRapidoFormRequest(Long id, String razaoSocial, String cnpj, String endereco, String telefone, String email, String senha, String dataCadastro) {
+    public LavaRapidoFormRequest(Long id, String razaoSocial, String cnpj, String endereco, String telefone, String email, String senha, LocalDate dataCadastro) {
         this.id = id;
         this.razaoSocial = razaoSocial;
         this.cnpj = cnpj;
