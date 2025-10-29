@@ -2,7 +2,7 @@ import { LavaRapido } from 'app/models/lava-rapidos'
 import { useFormik } from 'formik'
 import { Input, InputCnpj, InputTelefone } from 'components'
 import * as Yup from 'yup'
-import { error } from 'console'
+
 
 
 interface LavaRapidoFormProps {
