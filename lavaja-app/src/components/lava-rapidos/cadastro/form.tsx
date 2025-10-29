@@ -1,6 +1,8 @@
 import { LavaRapido } from 'app/models/lava-rapidos'
 import { useFormik } from 'formik'
 import { Input, InputCnpj, InputTelefone } from 'components'
+import * as Yup from 'yup'
+import { error } from 'console'
 
 
 interface LavaRapidoFormProps {
@@ -19,6 +21,17 @@ const formScheme: LavaRapido = {
     dataCadastro: ''
 }
 
+const msgObrigatorio = "Campo obrigatório"
+
+const validationSchema = Yup.object().shape({
+    razaoSocial: Yup.string().trim().required(msgObrigatorio),
+    cnpj: Yup.string().trim().required(msgObrigatorio).length(18, 'O CNPJ está incompleto'),
+    endereco: Yup.string().trim().required(msgObrigatorio),
+    telefone: Yup.string().trim().required(msgObrigatorio),
+    email: Yup.string().trim().required(msgObrigatorio).email("E-mail inválido!"),
+    senha: Yup.string().trim().required(msgObrigatorio),
+})
+
 export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
     lavaRapido,
     onSubmit
@@ -27,8 +40,11 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
     const formik = useFormik<LavaRapido>({
         initialValues: {...formScheme, ...lavaRapido},
         onSubmit,
-        enableReinitialize: true
+        enableReinitialize: true,
+        validationSchema: validationSchema
     })
+
+    console.log(formik.errors)
 
     return(
         <form onSubmit={formik.handleSubmit}>
@@ -64,7 +80,8 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     label='Razão Social:' 
                     onChange={formik.handleChange} 
                     value={formik.values.razaoSocial}
-                    autoComplete='off'>
+                    autoComplete='off'
+                    error={formik.errors.razaoSocial}>
                 </Input>
             </div> 
             <div className="field is-horizontal"> 
@@ -75,7 +92,8 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     label='CNPJ:' 
                     onChange={formik.handleChange} 
                     value={formik.values.cnpj}
-                    autoComplete='off'>
+                    autoComplete='off'
+                    error={formik.errors.cnpj}>
                 </InputCnpj>
                 <InputTelefone 
                     className='input is-half'
@@ -84,7 +102,8 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     label='Telefone:' 
                     onChange={formik.handleChange} 
                     value={formik.values.telefone}
-                    autoComplete='off'>
+                    autoComplete='off'
+                    error={formik.errors.telefone}>
                 </InputTelefone>
             </div>  
             <div className="field">
@@ -95,7 +114,8 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     label='Endereço:' 
                     onChange={formik.handleChange} 
                     value={formik.values.endereco}
-                    autoComplete='off'>
+                    autoComplete='off'
+                    error={formik.errors.endereco}>
                 </Input>
             </div>
             <div className="field is-horizontal">
@@ -106,7 +126,8 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     label='E-mail:' 
                     onChange={formik.handleChange} 
                     value={formik.values.email}
-                    autoComplete='off'>
+                    autoComplete='off'
+                    error={formik.errors.email}>
                 </Input>
                 <Input 
                     className='input is-full'
@@ -116,7 +137,8 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     type='password'
                     onChange={formik.handleChange} 
                     value={formik.values.senha}
-                    autoComplete='off'>
+                    autoComplete='off'
+                    error={formik.errors.senha}>
                 </Input>
             </div>
             <div className="field is-grouped">
