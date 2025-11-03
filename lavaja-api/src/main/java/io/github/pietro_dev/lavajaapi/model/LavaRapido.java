@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,6 +25,9 @@ public class LavaRapido {
     @Column(name="data_cadastro")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCadastro;
+
+    @OneToMany(mappedBy = "lavaRapido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Servico> servicos;
 
     @PrePersist
     public void prePersist(){

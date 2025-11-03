@@ -2,6 +2,7 @@ package io.github.pietro_dev.lavajaapi.rest.servicos;
 
 import io.github.pietro_dev.lavajaapi.model.Servico;
 import io.github.pietro_dev.lavajaapi.model.repository.ServicoRepository;
+import io.github.pietro_dev.lavajaapi.services.ServicoService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,13 +24,14 @@ public class ServicoController {
 
     @Autowired
     ServicoRepository servicoRepository;
+    @Autowired
+    ServicoService servicoService;
 
     @PostMapping
-    public ServicoFormRequest salvar(@RequestBody ServicoFormRequest servico){
-        Servico entidadeServico = servico.toModel();
+    public ResponseEntity<Servico> salvar(@RequestBody ServicoFormRequest servicoFormRequest){
+        Servico servico = servicoService.salvar(servicoFormRequest);
 
-        servicoRepository.save(entidadeServico);
-        return ServicoFormRequest.fromModel(entidadeServico);
+        return ResponseEntity.ok(servico);
     }
 
     @PutMapping("{id}")

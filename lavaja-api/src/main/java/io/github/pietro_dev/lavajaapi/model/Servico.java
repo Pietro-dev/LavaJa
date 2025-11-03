@@ -25,10 +25,16 @@ public class Servico {
     @Column(name = "Data_cadastro")
     private LocalDate dataCadastro;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lava_rapido", nullable = false)
+    private LavaRapido lavaRapido;
+
+
     @PrePersist
     public void prePersist(){
         setDataCadastro(LocalDate.now());
     }
+
 
     public Servico() {
         super();
