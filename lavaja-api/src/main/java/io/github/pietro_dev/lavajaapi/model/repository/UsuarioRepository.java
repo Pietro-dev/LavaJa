@@ -1,4 +1,7 @@
 package io.github.pietro_dev.lavajaapi.model.repository;
 
-public interface UsuarioRepository {
+import io.github.pietro_dev.lavajaapi.model.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 }
