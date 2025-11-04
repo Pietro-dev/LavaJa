@@ -29,7 +29,7 @@ export const TabelaLavaRapido: React.FC<TabelaLavaRapidosProps> = ({
                         <th>Endereço</th>
                         <th>Telefone</th>
                         <th>E-mail</th>
-                        <th>Senha</th>
+                        {/* <th>Senha</th> */}
                         <th>Data cadastro</th>
                         <th>Ações</th>
                     </tr>
@@ -59,6 +59,12 @@ const LavaRapidoRow: React.FC<LavaRapidoRowProps> = ({
         }
     }
 
+    // ADICIONE ESTA FUNÇÃO:
+    const onEditClick = () => {
+        console.log('✏️ Clicou em editar, objeto:', lavaRapido)
+        onEdit(lavaRapido)
+    }
+
     const cancelarDelete = () => {
         setDeletando(false)
     }
@@ -71,12 +77,12 @@ const LavaRapidoRow: React.FC<LavaRapidoRowProps> = ({
             <td>{lavaRapido.endereco}</td>
             <td>{lavaRapido.telefone}</td>
             <td>{lavaRapido.email}</td>
-            <td>{lavaRapido.senha}</td>
+            {/* <td>{lavaRapido.senha}</td> */}
             <td>{lavaRapido.dataCadastro}</td>
             <td>
                 <div className='buttons' style={{flexWrap: 'nowrap'}}>
                     {!deletando &&
-                    <button onClick={e => onEdit(lavaRapido)} className='button is-warning is-dark is-rounded is-small'>Editar</button>
+                    <button onClick={onEditClick} className='button is-warning is-dark is-rounded is-small'>Editar</button>
                     }
                     <button onClick={e => onDeleteClick(lavaRapido)} className={`button is-${deletando ? "success" : "danger"} is-dark is-rounded is-small`}>{ deletando ? "Confirma?" : "Deletar"}</button>
                     {deletando &&

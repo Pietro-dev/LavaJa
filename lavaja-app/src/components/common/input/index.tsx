@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = ({
         <div className={`field column ${columnClasses}`} >
             <label className="label" htmlFor={id}>{label}</label>
             <div className="control">
-                <input className="input" type="text" 
+                <input className="input" type="text"
                 id={id} {...inputProps}
                 onChange={onInputChange}/>
                 {error &&

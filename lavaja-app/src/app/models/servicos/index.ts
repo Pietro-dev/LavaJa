@@ -4,7 +4,8 @@ export interface Servico {
     descricao?: string,
     valor?: number | null,
     duracao?: number | null,
-    dataCadastro?: string
+    dataCadastro?: string,
+    lavaRapidoId?: string
 }
 
 const servico: Servico = {  }

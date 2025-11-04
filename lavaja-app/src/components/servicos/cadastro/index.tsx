@@ -23,6 +23,7 @@ interface FormErrors {
     descricao?: string
     valor?: string
     duracao?: string
+    lavaRapidoId?: string
 }
 
 export const CadastroServicos: React.FC = ()=>{
@@ -39,6 +40,8 @@ export const CadastroServicos: React.FC = ()=>{
     const searchParams = useSearchParams()
     const queryId = searchParams.get('id')
 
+    const [ lavaRapidoId, setLavaRapidoId ] = useState<string>('')
+
     useEffect(() => {
         if(queryId){
             service.carregarServico(queryId).then(servicoEncontrado => {
@@ -48,6 +51,10 @@ export const CadastroServicos: React.FC = ()=>{
                 setDescricao(servicoEncontrado.descricao || '')
                 setDuracao(servicoEncontrado.duracao != null ? servicoEncontrado.duracao.toString() : '')
                 setValor(formatReal(servicoEncontrado.valor != null ? (servicoEncontrado.valor*100).toString() : ''))
+
+                 if (servicoEncontrado.lavaRapidoId) {
+                    setLavaRapidoId(String(servicoEncontrado.lavaRapidoId))
+                }
             })
         }
 
@@ -60,7 +67,8 @@ export const CadastroServicos: React.FC = ()=>{
             servico, 
             descricao, 
             valor: converterEmBigDecimal(valor), 
-            duracao: converterEmBigDecimal(duracao)
+            duracao: converterEmBigDecimal(duracao),
+            lavaRapidoId
         }
         validationSchema.validate(novoServico).then(obj => {
             setErrors({})
@@ -74,6 +82,7 @@ export const CadastroServicos: React.FC = ()=>{
                         ])
                     }) 
             }
+            console.log('>> PAYLOAD (antes do POST):', novoServico);
             service
                 .salvar(novoServico)
                 .then(servicoResposta => {
@@ -103,16 +112,28 @@ export const CadastroServicos: React.FC = ()=>{
                     <Input value={dataCadastro} label="Data de Cadastro:" id="dataCadastro" columnClasses='is-half' disabled/>
                 </div>         
             }
-            <Input 
-                onChange={e => setServico(e.target.value)} 
-                value={servico} 
-                label="Serviço:" 
-                id="servico" 
-                columnClasses='is-full' 
-                type='text' 
-                placeholder='Lavagem Simples'
-                error={errors.servico}
-            />
+            <div className="field is-horizontal">
+                <Input 
+                    onChange={e => setLavaRapidoId(e.target.value)} 
+                    value={lavaRapidoId} 
+                    label="Código do Lava-Rápido:" 
+                    id="codLavaRapido" 
+                    columnClasses='is-half' 
+                    type='text' 
+                    placeholder='Código Lava-Rápido'
+                    error={errors.lavaRapidoId}
+                />
+                <Input 
+                    onChange={e => setServico(e.target.value)} 
+                    value={servico} 
+                    label="Serviço:" 
+                    id="servico" 
+                    columnClasses='is-half' 
+                    type='text' 
+                    placeholder='Lavagem Simples'
+                    error={errors.servico}
+                />
+            </div>
             <Input 
                 onChange={e => setDescricao(e.target.value)} 
                 value={descricao} 
