@@ -82,7 +82,6 @@ export const CadastroServicos: React.FC = ()=>{
                         ])
                     }) 
             }
-            console.log('>> PAYLOAD (antes do POST):', novoServico);
             service
                 .salvar(novoServico)
                 .then(servicoResposta => {
