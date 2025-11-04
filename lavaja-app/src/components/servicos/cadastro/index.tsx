@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 const validationSchema = yup.object().shape({
+    lavaRapidoId: yup.string().trim().required("Campo obrigatório"),
     servico: yup.string().trim().required("Campo obrigatório"),
     descricao: yup.string().trim().required("Campo obrigatório"),
     valor: yup.number().required("Campo obrigatório").moreThan(0, "Preço deve ser diferente de zero!"),
