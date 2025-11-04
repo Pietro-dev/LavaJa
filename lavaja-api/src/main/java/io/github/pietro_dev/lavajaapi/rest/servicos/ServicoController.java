@@ -60,7 +60,7 @@ public class ServicoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ServicoFormRequest> getProdutoById(@PathVariable Long id){
+    public ResponseEntity<ServicoFormRequest> getServicoById(@PathVariable Long id){
         Optional<Servico> servicoExistente = servicoRepository.findById(id);
 
         if(servicoExistente.isEmpty()){

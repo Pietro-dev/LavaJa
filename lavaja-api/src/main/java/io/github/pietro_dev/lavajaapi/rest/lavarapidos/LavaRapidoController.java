@@ -2,6 +2,7 @@ package io.github.pietro_dev.lavajaapi.rest.lavarapidos;
 
 import io.github.pietro_dev.lavajaapi.model.LavaRapido;
 import io.github.pietro_dev.lavajaapi.model.repository.LavaRapidoRepository;
+import io.github.pietro_dev.lavajaapi.services.LavaRapidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ public class LavaRapidoController {
 
     @Autowired
     private LavaRapidoRepository lavaRapidoRepository;
+
+    @Autowired
+    private LavaRapidoService lavaRapidoService;
 
     @PostMapping
     public ResponseEntity salvar(@RequestBody LavaRapidoFormRequest request){
@@ -60,5 +64,11 @@ public class LavaRapidoController {
     @GetMapping
     public List<LavaRapidoFormRequest> getLista(){
         return lavaRapidoRepository.findAll().stream().map(LavaRapidoFormRequest::fromModel).collect(Collectors.toList());
+    }
+
+    @GetMapping("/com-servicos")
+    public ResponseEntity<List<LavaRapidoResponseDTO>> getListaComServicos() {
+        List<LavaRapidoResponseDTO> lavaRapidos = lavaRapidoService.listarLavaRapidosComServico();
+        return ResponseEntity.ok(lavaRapidos);
     }
 }

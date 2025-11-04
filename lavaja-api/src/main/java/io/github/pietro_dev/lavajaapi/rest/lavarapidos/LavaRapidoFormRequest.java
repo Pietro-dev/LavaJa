@@ -2,6 +2,8 @@ package io.github.pietro_dev.lavajaapi.rest.lavarapidos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.pietro_dev.lavajaapi.model.LavaRapido;
+import io.github.pietro_dev.lavajaapi.model.Servico;
+import io.github.pietro_dev.lavajaapi.rest.servicos.ServicoFormRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +11,7 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class LavaRapidoFormRequest {
@@ -39,6 +42,10 @@ public class LavaRapidoFormRequest {
         this.email = email;
         this.senha = senha;
         this.dataCadastro = dataCadastro;
+    }
+
+    public LavaRapidoFormRequest(Long id, String razaoSocial, String cnpj, String endereco, String telefone, String email, String senha, LocalDate dataCadastro, List<Servico> servicos) {
+
     }
 
     public LavaRapido toModel(){
