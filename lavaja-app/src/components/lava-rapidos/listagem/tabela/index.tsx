@@ -59,9 +59,7 @@ const LavaRapidoRow: React.FC<LavaRapidoRowProps> = ({
         }
     }
 
-    // ADICIONE ESTA FUNÇÃO:
     const onEditClick = () => {
-        console.log('✏️ Clicou em editar, objeto:', lavaRapido)
         onEdit(lavaRapido)
     }
 

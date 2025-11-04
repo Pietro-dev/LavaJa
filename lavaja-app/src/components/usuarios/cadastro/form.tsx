@@ -70,7 +70,8 @@ export const FormCadastroUsuarios: React.FC<UsuarioFormProps> = ({
                     placeholder="Insira seu melhor e-mail"
                     error={formik.errors.email}
                 />
-                <Input
+                {!formik.values.id &&
+                    <Input
                     onChange={formik.handleChange} 
                     value={formik.values.senha}
                     label="Senha: "
@@ -81,6 +82,7 @@ export const FormCadastroUsuarios: React.FC<UsuarioFormProps> = ({
                     placeholder="Crie uma senha"
                     error={formik.errors.senha}
                 />
+                }
             </div>
             <div className="field is-grouped">
                 <div className="control">
@@ -89,7 +91,7 @@ export const FormCadastroUsuarios: React.FC<UsuarioFormProps> = ({
                     </button>
                 </div>
                 <div className="control">
-                    <Link href="/consultas/servicos">
+                    <Link href="/consultas/usuarios">
                         <button className="button">Voltar</button>
                     </Link>
                 </div>
