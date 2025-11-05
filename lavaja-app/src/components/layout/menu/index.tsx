@@ -8,6 +8,7 @@ export const Menu:React.FC = ()=>{
                 <MenuItem href='/consultas/servicos' label='Serviços'/>
                 <MenuItem href='/consultas/lava-rapidos' label='Lava Rápidos'/>
                 <MenuItem href='/consultas/usuarios' label='Usuários'/>
+                <MenuItem href='/consultas/agendamentos' label='Agendamentos'/>
             </ul>
             <p className="menu-label">Lava-Rápidos</p>
             <ul className="menu-list">

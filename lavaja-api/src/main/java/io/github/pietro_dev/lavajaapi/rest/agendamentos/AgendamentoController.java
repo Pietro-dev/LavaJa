@@ -10,6 +10,7 @@ import java.util.List;
 
 @RequestMapping("/api/agendamentos")
 @RestController
+@CrossOrigin("*")
 public class AgendamentoController {
 
     @Autowired
