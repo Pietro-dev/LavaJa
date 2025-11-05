@@ -1,6 +1,7 @@
 package io.github.pietro_dev.lavajaapi.rest.agendamentos;
 
 import io.github.pietro_dev.lavajaapi.services.AgendamentoService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +39,9 @@ public class AgendamentoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<AgendamentoResponseDTO> atualizar(@PathVariable Long id, @RequestBody AgendamentoAtualizarStatusDTO body){
+        return ResponseEntity.ok(agendamentoService.atualizar(id, body));
+    }
 
 }

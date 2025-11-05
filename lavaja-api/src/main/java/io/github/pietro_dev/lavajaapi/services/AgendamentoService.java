@@ -7,6 +7,7 @@ import io.github.pietro_dev.lavajaapi.model.Usuario;
 import io.github.pietro_dev.lavajaapi.model.repository.AgendamentoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.ServicoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.UsuarioRepository;
+import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoAtualizarStatusDTO;
 import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoRequestDTO;
 import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class AgendamentoService {
 
     @Autowired
     ServicoRepository servicoRepository;
+
+
 
     public AgendamentoResponseDTO criarAgendamento(AgendamentoRequestDTO dto){
         if(dto.getInicio() == null){
@@ -91,4 +94,22 @@ public class AgendamentoService {
     public void deletar(Long id) {
         agendamentoRepository.deleteById(id);
     }
+
+    public AgendamentoResponseDTO atualizar(Long id, AgendamentoAtualizarStatusDTO body){
+
+        Agendamento agendamentoExistente = agendamentoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+
+        agendamentoExistente.setStatus(body.getStatus());
+        agendamentoExistente.setHoraInicio(body.getInicio());
+
+        LocalDateTime fim = body.getInicio().plusMinutes(agendamentoExistente.getDuracaoMinutos());
+
+        agendamentoExistente.setHoraFim(fim);
+
+        Agendamento agendamentoAtualizado = agendamentoRepository.save(agendamentoExistente);
+
+        return new AgendamentoResponseDTO(agendamentoAtualizado);
+    }
+
 }
