@@ -4,7 +4,7 @@ import { AgendamentoForm } from "./form"
 export const CadastroAgendamentos: React.FC = () => {
     return(
         <Layout titulo="Agendamentos">
-            <AgendamentoForm>
+            <AgendamentoForm >
                 
             </AgendamentoForm>
         </Layout>

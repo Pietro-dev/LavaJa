@@ -49,7 +49,7 @@ export const ListagemAgendamentos: React.FC = () => {
     
     return (
         <Layout titulo="Agendamentos Cadastrados" mensagens={messages}>
-            <Link href="cadastros/agendamentos">
+            <Link href="/   cadastros/agendamentos">
                 <button className="button is-primary is-dark">Novo</button>
                 <br />
                 <br />
