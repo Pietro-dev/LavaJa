@@ -31,4 +31,12 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentoService.buscar(id));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id){
+        agendamentoService.buscar(id);
+        agendamentoService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

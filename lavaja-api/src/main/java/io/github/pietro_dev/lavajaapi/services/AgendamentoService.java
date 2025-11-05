@@ -87,4 +87,8 @@ public class AgendamentoService {
         return agendamentoRepository.findById(id).map( AgendamentoResponseDTO :: new )
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado com ID: " + id));
     }
+
+    public void deletar(Long id) {
+        agendamentoRepository.deleteById(id);
+    }
 }
