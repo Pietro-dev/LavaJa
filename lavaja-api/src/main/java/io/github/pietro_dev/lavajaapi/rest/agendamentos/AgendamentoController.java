@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/agendamentos")
 @RestController
 public class AgendamentoController {
@@ -16,7 +18,17 @@ public class AgendamentoController {
     @PostMapping
     public ResponseEntity<AgendamentoResponseDTO> salvar(@RequestBody AgendamentoRequestDTO dto) {
         AgendamentoResponseDTO response = agendamentoService.criarAgendamento(dto);
-        System.out.println(response);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping
+    public ResponseEntity<List<AgendamentoResponseDTO>> listar(){
+        return ResponseEntity.ok(agendamentoService.listar());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AgendamentoResponseDTO> buscar(@PathVariable Long id){
+        return ResponseEntity.ok(agendamentoService.buscar(id));
+    }
+
 }

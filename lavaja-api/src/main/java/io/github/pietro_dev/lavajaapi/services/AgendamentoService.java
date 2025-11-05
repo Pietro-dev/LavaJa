@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AgendamentoService {
@@ -76,5 +77,14 @@ public class AgendamentoService {
 
         Agendamento agendamentoSalvo = agendamentoRepository.save(agendamento);
         return new AgendamentoResponseDTO(agendamentoSalvo);
+    }
+
+    public List<AgendamentoResponseDTO> listar(){
+        return agendamentoRepository.findAll().stream().map( AgendamentoResponseDTO :: new ).toList();
+    }
+
+    public AgendamentoResponseDTO buscar(Long id){
+        return agendamentoRepository.findById(id).map( AgendamentoResponseDTO :: new )
+                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado com ID: " + id));
     }
 }
