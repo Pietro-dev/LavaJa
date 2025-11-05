@@ -26,11 +26,20 @@ public class AgendamentoResponseDTO {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCriacao;
 
+    private String servicoNome;
+    private String lavaRapidoNome;
+    private String usuarioNome;
+
     public AgendamentoResponseDTO(Agendamento ag) {
         this.id = ag.getId();
 //        this.servicoId = ag.getServico() != null ? ag.getServico().getId() : null;
 //        this.lavaRapidoId = ag.getLavaRapido() != null ? ag.getLavaRapido().getId() : null;
 //        this.usuarioId = ag.getUsuario() != null ? ag.getUsuario().getId() : null;
+
+        this.servicoNome = ag.getServico() != null ? ag.getServico().getServico() : null;
+        this.lavaRapidoNome = ag.getLavaRapido() != null ? ag.getLavaRapido().getRazaoSocial() : null;
+        this.usuarioNome = ag.getUsuario() != null ? ag.getUsuario().getNome() : null;
+
         this.inicio = ag.getHoraInicio();
         this.fim = ag.getHoraFim();
         this.duracaoMinutos = ag.getDuracaoMinutos();
