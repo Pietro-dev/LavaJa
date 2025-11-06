@@ -66,7 +66,6 @@ const AgendamentoRow: React.FC<AgendamentoRowProps> = ({
     const cancelarDelete = () => {
         setDeletando(false)
     }
-    console.log(agendamento)
     return (
         <tr>
             <td>{agendamento.id}</td>

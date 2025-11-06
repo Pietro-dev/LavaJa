@@ -29,6 +29,9 @@ public class AgendamentoResponseDTO {
     private String servicoNome;
     private String lavaRapidoNome;
     private String usuarioNome;
+    private Long usuarioId;
+    private Long servicoId;
+    private Long lavaRapidoId;
 
     public AgendamentoResponseDTO(Agendamento ag) {
         this.id = ag.getId();
@@ -46,6 +49,9 @@ public class AgendamentoResponseDTO {
         this.valor = ag.getValor();
         this.status = ag.getStatus() != null ? ag.getStatus().name() : null;
         this.dataCriacao = ag.getDataCriacao();
+        this.usuarioId = ag.getUsuario().getId();
+        this.lavaRapidoId = ag.getLavaRapido().getId();
+        this.servicoId = ag.getServico().getId();
     }
 
     public AgendamentoResponseDTO( LocalDateTime inicio, LocalDateTime fim, Integer duracaoMinutos, BigDecimal valor, String status) {

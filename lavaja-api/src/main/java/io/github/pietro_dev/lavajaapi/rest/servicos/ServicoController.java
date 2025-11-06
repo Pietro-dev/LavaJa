@@ -47,11 +47,6 @@ public class ServicoController {
 
     @GetMapping
     public ResponseEntity<List<ServicoListDTO>> listar(@RequestParam(required = false) String razaoSocial){
-//        try {
-//            Thread.sleep(1500);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
         System.out.println("filtro: " + razaoSocial);
         List<ServicoListDTO> lista = servicoService.listarPorRazaoSocialLavaRapido(razaoSocial);
         return ResponseEntity.ok(lista);

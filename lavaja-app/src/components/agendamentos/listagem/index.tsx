@@ -34,7 +34,7 @@ export const ListagemAgendamentos: React.FC = () => {
 
         service.deletar(agendamento.id).then(response => {
             setMessages([
-                { texto:"Lava-rápido excluído com sucesso!", tipo:"success", titulo:"Sucesso!" }
+                { texto:"Agendamento excluído com sucesso!", tipo:"success", titulo:"Sucesso!" }
             ])
             const listaAlterada = lista?.filter(s => s.id !== agendamento.id)
             setLista(listaAlterada)
@@ -49,7 +49,7 @@ export const ListagemAgendamentos: React.FC = () => {
     
     return (
         <Layout titulo="Agendamentos Cadastrados" mensagens={messages}>
-            <Link href="/   cadastros/agendamentos">
+            <Link href="/cadastros/agendamentos">
                 <button className="button is-primary is-dark">Novo</button>
                 <br />
                 <br />
