@@ -22,4 +22,12 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
             @Param("inicio") LocalDateTime inicio,
             @Param("fim") LocalDateTime fim
     );
+
+    // Conta agendamentos por lava rápido
+    @Query("SELECT COUNT(a) FROM Agendamento a WHERE a.lavaRapido.id = :lavaRapidoId")
+    long countByLavaRapidoId(@Param("lavaRapidoId") Long lavaRapidoId);
+
+    // Conta usuários distintos por lava rápido
+    @Query("SELECT COUNT(DISTINCT a.usuario.id) FROM Agendamento a WHERE a.lavaRapido.id = :lavaRapidoId")
+    long countDistinctUsuariosByLavaRapidoId(@Param("lavaRapidoId") Long lavaRapidoId);
 }

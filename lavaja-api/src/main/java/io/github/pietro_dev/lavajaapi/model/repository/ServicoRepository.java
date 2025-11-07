@@ -15,4 +15,7 @@ public interface ServicoRepository extends JpaRepository<Servico,Long> {
             "where lower(lr.razaoSocial) like lower(concat('%', :razao, '%'))")
     List<ServicoListDTO> findByLavaRapidoRazaoSocialContainingIgnoreCase(@Param("razao") String razaoSocial);
 
+    // Conta serviços por lava rápido
+    @Query("SELECT COUNT(s) FROM Servico s WHERE s.lavaRapido.id = :lavaRapidoId")
+    long countByLavaRapidoId(@Param("lavaRapidoId") Long lavaRapidoId);
 }
