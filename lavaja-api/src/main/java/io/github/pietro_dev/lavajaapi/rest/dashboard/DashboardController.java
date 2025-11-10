@@ -5,7 +5,10 @@ import io.github.pietro_dev.lavajaapi.model.repository.AgendamentoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.ServicoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/dashboard")
@@ -25,6 +28,9 @@ public class DashboardController {
         long servicosCount = servicoRepository.countByLavaRapidoId(lavaRapidoId);
         long usuariosCount = agendamentoRepository.countDistinctUsuariosByLavaRapidoId(lavaRapidoId);
 
-        return new DashboardData(servicosCount, agendamentosCount, usuariosCount);
+        var mesCorrente = LocalDate.now().getMonthValue();
+        var agendamentosPorDia = agendamentoRepository.obterContagemAgendamentoPorDia(mesCorrente, lavaRapidoId);
+
+        return new DashboardData(servicosCount, agendamentosCount, usuariosCount, agendamentosPorDia);
     }
 }
