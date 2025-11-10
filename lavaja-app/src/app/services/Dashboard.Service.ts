@@ -11,7 +11,7 @@ export const useDashboardService = () => {
             const response: AxiosResponse<DashboardData> = await httpClient.get(
                 `${resourceURL}?lavaRapidoId=${lavaRapidoId}`
             )
-            return response.data
+            return response.data    
         }
     }
 }

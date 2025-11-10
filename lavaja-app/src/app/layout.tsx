@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
+'use client'
+
 import 'primereact/resources/themes/lara-dark-purple/theme.css'
 import 'bulma/css/bulma.css'
 import 'components/common/loader/loader.css'
+import { SessionProvider } from "next-auth/react";
 
-export const metadata: Metadata = {
-  title: "LavaJá",
-  description: "",
-};
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-br">
       <body>
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { signOut } from 'next-auth/react'
 
 export const Menu:React.FC = ()=>{
     return(
@@ -9,18 +10,15 @@ export const Menu:React.FC = ()=>{
                 <MenuItem href='/consultas/lava-rapidos' label='Lava Rápidos'/>
                 <MenuItem href='/consultas/usuarios' label='Usuários'/>
                 <MenuItem href='/consultas/agendamentos' label='Agendamentos'/>
+                <MenuItem href='/' onClick={() => signOut()} label='Sair'/>
             </ul>
             <p className="menu-label">Lava-Rápidos</p>
             <ul className="menu-list">
                 <MenuItem href='/dashboard' label='Dashboard'/>
-                <MenuItem href='/consultas/servicos' label='Meus Serviços'/>
-                <MenuItem href='/' label='Perfil'/>
             </ul>
             <p className="menu-label">Usuários</p>
             <ul className="menu-list">
                 <MenuItem href='/' label='Home'/>
-                <MenuItem href='/' label='Meus agendamentos'/>
-                <MenuItem href='/' label='Perfil'/>
             </ul>
         </aside>
     )
@@ -28,13 +26,14 @@ export const Menu:React.FC = ()=>{
 
 interface MenuItemProps {
     href: string,
-    label: string
+    label: string,
+    onClick?: () => void
 }
 
 const MenuItem:React.FC<MenuItemProps> = (props: MenuItemProps)=>{
     return(
         <li>
-            <Link href={props.href}>
+            <Link href={props.href} onClick={props.onClick}>
                 <span className="icon"></span>{props.label}
             </Link>
         </li>

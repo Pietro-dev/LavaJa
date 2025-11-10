@@ -11,20 +11,26 @@ export const DashboardClient: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData>({
     clientes: 0,
     agendamentos: 0,
-    servicos: 0
+    servicos: 0,
+    agendamentosPorDia: []
   })
   const [loading, setLoading] = useState<boolean>(false)
 
   const service = useDashboardService()
 
-  // Função para buscar dados
   const fetchData = async (id: string) => {
     if (!id) return
     
     setLoading(true)
     try {
-      const data = await service.get(id)
-      setDashboardData(data)
+      const data: DashboardData = await service.get(id)
+      
+      setDashboardData({
+        clientes: data.clientes || 0,
+        agendamentos: data.agendamentos || 0,
+        servicos: data.servicos || 0,
+        agendamentosPorDia: data.agendamentosPorDia || []
+      })
     } catch (error) {
       console.error('Erro ao buscar dados:', error)
     } finally {
@@ -32,20 +38,17 @@ export const DashboardClient: React.FC = () => {
     }
   }
 
-  // Buscar dados automaticamente quando lavaRapidoId mudar
   useEffect(() => {
     fetchData(lavaRapidoId)
-  }, []) // Busca inicial
+  }, [])
 
-  // Handler para mudança do input
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newId = event.target.value
     setLavaRapidoId(newId)
   }
 
-  // Handler para buscar dados manualmente
   const handleBuscarClick = () => {
-    fetchData(lavaRapidoId) // Agora usa o valor atual
+    fetchData(lavaRapidoId)
   }
 
   return (
@@ -56,6 +59,8 @@ export const DashboardClient: React.FC = () => {
       lavaRapidoId={lavaRapidoId}
       onLavaRapidoIdChange={handleInputChange}
       onBuscarClick={handleBuscarClick}
+      loading={loading}
+      agendamentosPorDia={dashboardData.agendamentosPorDia}
     />
   )
 }

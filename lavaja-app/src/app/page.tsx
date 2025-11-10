@@ -1,10 +1,12 @@
-import { Layout } from 'components'
+'use client'
+
+import { DashboardClient, Layout, RotaAutenticada } from 'components'
 
 const Home: React.FC = () => {
   return (
-    <div>
-      <Layout />
-    </div>
+    <RotaAutenticada>
+      <DashboardClient />
+    </RotaAutenticada>
   );
 }
 
