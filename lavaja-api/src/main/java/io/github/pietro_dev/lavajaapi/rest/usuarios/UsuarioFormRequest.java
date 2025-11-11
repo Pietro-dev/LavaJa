@@ -1,8 +1,8 @@
 package io.github.pietro_dev.lavajaapi.rest.usuarios;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.pietro_dev.lavajaapi.model.UsuarioRole;
 import io.github.pietro_dev.lavajaapi.model.Usuario;
 import lombok.Data;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -14,6 +14,8 @@ public class UsuarioFormRequest {
     private String senha;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCadastro;
+
+    private UsuarioRole role;
 
     UsuarioFormRequest(){
         super();
