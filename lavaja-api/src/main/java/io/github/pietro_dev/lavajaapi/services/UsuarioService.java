@@ -19,20 +19,11 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    public Usuario salvar(UsuarioFormRequest usuarioFormRequest){
+    public Usuario salvar(UsuarioFormRequest usuarioFormRequest) {
         Usuario usuario = usuarioFormRequest.toModel();
 
         return usuarioRepository.save(usuario);
     }
 
-//    public ResponseEntity<UsuarioResponseDTO> atualizar(Long id, Usuario usuarioAtualizado, Optional<Usuario> usuarioExistente) {
-//        usuarioExistente.setId(id);
-//        usuarioExistente.setNome(usuarioAtualizado.getNome());
-//        usuarioExistente.setEmail(usuarioAtualizado.getEmail());
-//        usuarioExistente.setSenha(usuarioAtualizado.getSenha());
-//
-//        UsuarioResponseDTO response = new UsuarioResponseDTO(usuarioExistente);
-//
-//        return ResponseEntity.ok(response);
-//    }
+
 }

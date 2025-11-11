@@ -3,7 +3,6 @@ package io.github.pietro_dev.lavajaapi.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +20,7 @@ public class LavaRapido {
     private String telefone;
     private String email;
     private String senha;
+    private UsuarioRole role;
 
     @Column(name="data_cadastro")
     @JsonFormat(pattern = "dd/MM/yyyy")

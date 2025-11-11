@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.management.relation.Role;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -30,10 +31,18 @@ public class Usuario implements UserDetails {
     @PrePersist
     public void prePersist(){
         setDataCadastro(LocalDate.now());
+        setRole(UsuarioRole.CLIENTE);
     }
 
     public Usuario(){
         super();
+    }
+
+    public Usuario(String nome, String email, String senha, UsuarioRole role){
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.role = role;
     }
 
     public Usuario(String nome, String email, String senha){
