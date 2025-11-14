@@ -48,4 +48,8 @@ public class ServicoService {
             return servicoRepository.findByLavaRapidoRazaoSocialContainingIgnoreCase(razaoSocial);
         }
     }
+
+    public List<Servico> findByLavaRapidoId(Long lavaRapidoId) {
+        return servicoRepository.findByLavaRapidoId(lavaRapidoId);
+    }
 }

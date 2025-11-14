@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,20 +97,28 @@ public class AgendamentoService {
     }
 
     public AgendamentoResponseDTO atualizar(Long id, AgendamentoAtualizarStatusDTO body){
-
         Agendamento agendamentoExistente = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
 
         agendamentoExistente.setStatus(body.getStatus());
-        agendamentoExistente.setHoraInicio(body.getInicio());
 
-        LocalDateTime fim = body.getInicio().plusMinutes(agendamentoExistente.getDuracaoMinutos());
+        // 🔥 CORREÇÃO: Usar diretamente o LocalDateTime, não fazer parse
+        LocalDateTime inicio = body.getInicio(); // Já é LocalDateTime!
+        agendamentoExistente.setHoraInicio(inicio);
 
+        LocalDateTime fim = inicio.plusMinutes(agendamentoExistente.getDuracaoMinutos());
         agendamentoExistente.setHoraFim(fim);
 
         Agendamento agendamentoAtualizado = agendamentoRepository.save(agendamentoExistente);
-
         return new AgendamentoResponseDTO(agendamentoAtualizado);
+    }
+
+    public List<Agendamento> buscarAgendamentosPorUsuario(Long usuarioId) {
+        return agendamentoRepository.findAgendamentosPorUsuario(usuarioId);
+    }
+
+    public List<Agendamento> buscarAgendamentosPorLavaRapidoId(Long usuarioId) {
+        return agendamentoRepository.findAgendamentosPorLavaRapido(usuarioId);
     }
 
 }
