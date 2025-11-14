@@ -22,8 +22,10 @@ public class DashboardController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @GetMapping
-    public DashboardData getDashboard(@RequestParam Long lavaRapidoId) {
+
+    @GetMapping("/{lavaRapidoId}")
+    public DashboardData getDashboard(@PathVariable Long lavaRapidoId) {
+        System.out.println("lavaRapidoId: " + lavaRapidoId);
         long agendamentosCount = agendamentoRepository.countByLavaRapidoId(lavaRapidoId);
         long servicosCount = servicoRepository.countByLavaRapidoId(lavaRapidoId);
         long usuariosCount = agendamentoRepository.countDistinctUsuariosByLavaRapidoId(lavaRapidoId);
