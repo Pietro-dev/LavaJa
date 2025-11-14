@@ -3,16 +3,16 @@
 import 'primereact/resources/themes/lara-dark-purple/theme.css'
 import 'bulma/css/bulma.css'
 import 'components/common/loader/loader.css'
-import { SessionProvider } from "next-auth/react";
+import { AuthProvider } from "../context/AuthContext";
 
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-br">
       <body>
-        <SessionProvider>
+        <AuthProvider>
           {children}
-        </SessionProvider>
+        </AuthProvider>
       </body>
     </html>
   );
