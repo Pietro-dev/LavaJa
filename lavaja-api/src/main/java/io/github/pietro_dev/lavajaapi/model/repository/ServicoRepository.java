@@ -18,4 +18,6 @@ public interface ServicoRepository extends JpaRepository<Servico,Long> {
     // Conta serviços por lava rápido
     @Query("SELECT COUNT(s) FROM Servico s WHERE s.lavaRapido.id = :lavaRapidoId")
     long countByLavaRapidoId(@Param("lavaRapidoId") Long lavaRapidoId);
+
+    List<Servico> findByLavaRapidoId(Long lavaRapidoId);
 }
