@@ -7,7 +7,7 @@ const resourceURL: string = "/api/lava-rapidos"
 export const useLavaRapidoService = ()=>{
 
     const salvar = async (lavaRapido: LavaRapido) : Promise<LavaRapido> => {
-        const response: AxiosResponse<LavaRapido> = await httpClient.post<LavaRapido>(resourceURL, lavaRapido)
+        const response: AxiosResponse<LavaRapido> = await httpClient.post<LavaRapido>("/auth/cadastro/lava-rapidos", lavaRapido)
         return response.data
     }
 

@@ -27,10 +27,16 @@ export const useServicoService = ()=>{
         await httpClient.delete(url)
     }
 
+    const getByLavaRapido = async (lavaRapidoId: string): Promise<Servico[]> => {
+        const response = await httpClient.get(`${resourceURL}/${lavaRapidoId}/servicos`)
+        return response.data
+    }       
+
     return {
         salvar,
         atualizar,
         carregarServico,
-        deletar
+        deletar,
+        getByLavaRapido
     }
 }

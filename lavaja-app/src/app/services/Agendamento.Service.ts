@@ -8,8 +8,6 @@ export const useAgendamentoService = () => {
 
     const salvar = async (agendamento: Agendamento) : Promise<Agendamento> => {
             const response: AxiosResponse<Agendamento> = await httpClient.post<Agendamento>(resourceURL, agendamento)
-            console.log(response)
-            console.log(agendamento)    
             return response.data
         }
     
