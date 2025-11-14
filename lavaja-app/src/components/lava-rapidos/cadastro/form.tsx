@@ -4,14 +4,22 @@ import { Input, InputCnpj, InputTelefone } from 'components'
 import * as Yup from 'yup'
 import Link from 'next/link'
 
-
-
 interface LavaRapidoFormProps {
     lavaRapido: LavaRapido
-    onSubmit: (LavaRapido: LavaRapido) => void
+    onSubmit: (lavaRapido: LavaRapido) => void
 }
 
-const formScheme: LavaRapido = {
+// Interface para cadastro (com senha)
+interface LavaRapidoCadastro extends LavaRapido {
+    senha: string
+}
+
+// Interface para edição (sem senha)
+interface LavaRapidoEdicao extends Omit<LavaRapido, 'senha'> {
+    senha?: string
+}
+
+const formScheme: LavaRapidoCadastro = {
     id: '',
     razaoSocial: '',
     cnpj: '',
@@ -24,13 +32,23 @@ const formScheme: LavaRapido = {
 
 const msgObrigatorio = "Campo obrigatório"
 
-const validationSchema = Yup.object().shape({
+// Schema de validação para CADASTRO
+const validationSchemaCadastro = Yup.object().shape({
     razaoSocial: Yup.string().trim().required(msgObrigatorio),
     cnpj: Yup.string().trim().required(msgObrigatorio).length(18, 'O CNPJ está incompleto'),
     endereco: Yup.string().trim().required(msgObrigatorio),
     telefone: Yup.string().trim().required(msgObrigatorio),
     email: Yup.string().trim().required(msgObrigatorio).email("E-mail inválido!"),
-    senha: Yup.string().trim().required(msgObrigatorio),
+    senha: Yup.string().trim().required(msgObrigatorio).min(6, 'A senha deve ter pelo menos 6 caracteres'),
+})
+
+// Schema de validação para EDIÇÃO (sem senha)
+const validationSchemaEdicao = Yup.object().shape({
+    razaoSocial: Yup.string().trim().required(msgObrigatorio),
+    cnpj: Yup.string().trim().required(msgObrigatorio).length(18, 'O CNPJ está incompleto'),
+    endereco: Yup.string().trim().required(msgObrigatorio),
+    telefone: Yup.string().trim().required(msgObrigatorio),
+    email: Yup.string().trim().required(msgObrigatorio).email("E-mail inválido!"),
 })
 
 export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
@@ -38,41 +56,57 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
     onSubmit
 }) => {
 
-    const formik = useFormik<LavaRapido>({
-        initialValues: {...formScheme, ...lavaRapido},
-        onSubmit,
+    // Função para tratar o envio baseado no contexto (cadastro/edição)
+    const handleSubmit = (values: LavaRapidoCadastro) => {
+        console.log('📤 Dados do formulário:', values)
+        
+        if (values.id) {
+            // 🔥 EDIÇÃO: Remove a senha do payload
+            const { senha, ...dadosEdicao } = values
+            onSubmit(dadosEdicao as LavaRapido)
+        } else {
+            // 🔥 CADASTRO: Envia com senha
+            onSubmit(values)
+        }
+    }
+
+    const formik = useFormik<LavaRapidoCadastro>({
+        initialValues: { ...formScheme, ...lavaRapido },
+        onSubmit: handleSubmit,
         enableReinitialize: true,
-        validationSchema: validationSchema
+        validationSchema: lavaRapido.id ? validationSchemaEdicao : validationSchemaCadastro
     })
 
-    console.log(formik.errors)
+    console.log('🔍 Erros do Formik:', formik.errors)
+    console.log('📝 Valores do Formik:', formik.values)
 
-    return(
+    return (
         <form onSubmit={formik.handleSubmit}>
             {formik.values.id &&
-            <div className="field is-horizontal"> 
-                <Input 
-                    className='input is-half'
-                    id='id' 
-                    name='id' 
-                    label='Código:' 
-                    onChange={formik.handleChange} 
-                    value={formik.values.id}
-                    autoComplete='off'
-                    disabled>
-                </Input>
-                <Input 
-                    className='input is-half'
-                    id='dataCadastro' 
-                    name='dataCadastro' 
-                    label='Data de cadastro:' 
-                    onChange={formik.handleChange} 
-                    value={formik.values.dataCadastro}
-                    autoComplete='off'
-                    disabled>
-                </Input>
-            </div>
+                <div className="field is-horizontal"> 
+                    <Input 
+                        className='input is-half'
+                        id='id' 
+                        name='id' 
+                        label='Código:' 
+                        onChange={formik.handleChange} 
+                        value={formik.values.id}
+                        autoComplete='off'
+                        disabled
+                    />
+                    <Input 
+                        className='input is-half'
+                        id='dataCadastro' 
+                        name='dataCadastro' 
+                        label='Data de cadastro:' 
+                        onChange={formik.handleChange} 
+                        value={formik.values.dataCadastro}
+                        autoComplete='off'
+                        disabled
+                    />
+                </div>
             }
+            
             <div className="field">
                 <Input 
                     className='input is-full'
@@ -82,9 +116,10 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     onChange={formik.handleChange} 
                     value={formik.values.razaoSocial}
                     autoComplete='off'
-                    error={formik.errors.razaoSocial}>
-                </Input>
+                    error={formik.errors.razaoSocial}
+                />
             </div> 
+            
             <div className="field is-horizontal"> 
                 <InputCnpj
                     className='input is-half'
@@ -94,8 +129,8 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     onChange={formik.handleChange} 
                     value={formik.values.cnpj}
                     autoComplete='off'
-                    error={formik.errors.cnpj}>
-                </InputCnpj>
+                    error={formik.errors.cnpj}
+                />
                 <InputTelefone 
                     className='input is-half'
                     id='telefone' 
@@ -104,9 +139,10 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     onChange={formik.handleChange} 
                     value={formik.values.telefone}
                     autoComplete='off'
-                    error={formik.errors.telefone}>
-                </InputTelefone>
+                    error={formik.errors.telefone}
+                />
             </div>  
+            
             <div className="field">
                 <Input 
                     className='input is-full'
@@ -116,9 +152,10 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     onChange={formik.handleChange} 
                     value={formik.values.endereco}
                     autoComplete='off'
-                    error={formik.errors.endereco}>
-                </Input>
+                    error={formik.errors.endereco}
+                />
             </div>
+            
             <div className="field is-horizontal">
                 <Input 
                     className='input is-full'
@@ -128,29 +165,39 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     onChange={formik.handleChange} 
                     value={formik.values.email}
                     autoComplete='off'
-                    error={formik.errors.email}>
-                </Input>
-                <Input 
-                    className='input is-full'
-                    id='senha' 
-                    name='senha' 
-                    label='Senha:' 
-                    type='password'
-                    onChange={formik.handleChange} 
-                    value={formik.values.senha}
-                    autoComplete='off'
-                    error={formik.errors.senha}>
-                </Input>
+                    error={formik.errors.email}
+                />
+                
+                {/* 🔥 CAMPO SENHA CONDICIONAL */}
+                {!formik.values.id && (
+                    <Input 
+                        className='input is-full'
+                        id='senha' 
+                        name='senha' 
+                        label='Senha:' 
+                        type='password'
+                        onChange={formik.handleChange} 
+                        value={formik.values.senha}
+                        autoComplete='off'
+                        error={formik.errors.senha}
+                    />
+                )}
             </div>
+            
             <div className="field is-grouped">
                 <div className="control">
-                    <button className="button is-primary is-dark">
+                    <button 
+                        type="submit"
+                        className="button is-primary is-dark"
+                    >
                         {formik.values.id ? "Atualizar" : "Salvar"}
                     </button>
                 </div>
                 <div className="control">
                     <Link href="/consultas/lava-rapidos">
-                        <button className="button">Voltar</button>
+                        <button type="button" className="button">
+                            Voltar
+                        </button>
                     </Link>
                 </div>
             </div>
