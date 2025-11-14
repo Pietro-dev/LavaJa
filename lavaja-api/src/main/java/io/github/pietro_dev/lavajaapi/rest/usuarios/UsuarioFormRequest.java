@@ -17,7 +17,7 @@ public class UsuarioFormRequest {
 
     private UsuarioRole role;
 
-    UsuarioFormRequest(){
+    public UsuarioFormRequest(){
         super();
     }
 
@@ -31,6 +31,6 @@ public class UsuarioFormRequest {
     }
 
     public Usuario toModel(){
-        return new Usuario(id, nome, email, senha, dataCadastro);
+        return new Usuario(id, nome, email, senha, dataCadastro, role);
     }
 }

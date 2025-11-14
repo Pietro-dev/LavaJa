@@ -1,31 +1,24 @@
 package io.github.pietro_dev.lavajaapi.rest.usuarios;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.pietro_dev.lavajaapi.model.Servico;
 import io.github.pietro_dev.lavajaapi.model.Usuario;
 import lombok.Data;
 
 import java.time.LocalDate;
-
 @Data
-public class UsuarioResponseDTO {
+public class UsuarioGetByIdResponseDTO {
     private Long id;
     private String nome;
     private String email;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCadastro;
-    private String senha;
+    private String senhaAtual;
 
-    public UsuarioResponseDTO(Usuario usuario) {
+    public UsuarioGetByIdResponseDTO(Usuario usuario) {
         this.id = usuario.getId();
         this.nome = usuario.getNome();
         this.email = usuario.getEmail();
         this.dataCadastro = usuario.getDataCadastro();
+        this.senhaAtual = usuario.getSenha();
     }
-//    public UsuarioResponseDTO(UsuarioFormRequest usuario) {
-//        this.id = usuario.getId();
-//        this.nome = usuario.getNome();
-//        this.email = usuario.getEmail();
-//        this.dataCadastro = usuario.getDataCadastro();
-//    }
 }
