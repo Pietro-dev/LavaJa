@@ -41,4 +41,10 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
             "ORDER BY dia",
             nativeQuery = true)
     List<AgendamentoPorDia> obterContagemAgendamentoPorDia(@Param("mes") Integer mes, @Param("lavaRapidoId") Long lavaRapidoId);
+
+    @Query("SELECT a FROM Agendamento a WHERE a.usuario.id = :usuarioId ORDER BY a.horaInicio DESC")
+    List<Agendamento> findAgendamentosPorUsuario(@Param("usuarioId") Long usuarioId);
+
+    @Query("SELECT a FROM Agendamento a WHERE a.lavaRapido.id = :lavaRapidoId ORDER BY a.horaInicio DESC")
+    List<Agendamento> findAgendamentosPorLavaRapido(@Param("lavaRapidoId") Long lavaRapidoId);
 }
