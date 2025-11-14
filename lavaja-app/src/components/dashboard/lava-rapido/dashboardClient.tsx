@@ -18,11 +18,25 @@ export const DashboardClient: React.FC = () => {
 
   const service = useDashboardService()
 
+  // 🔥 BUSCA APENAS O ID DO LAVA RÁPIDO LOGADO
+  const getLavaRapidoId = (): string => {
+    if (typeof window !== 'undefined') {
+      const id = localStorage.getItem('lavaRapidoId')
+      console.log('🔍 Lava Rápido ID encontrado:', id)
+      return id || ''
+    }
+    return ''
+  }
+
   const fetchData = async (id: string) => {
-    if (!id) return
+    if (!id) {
+      console.log('❌ Nenhum ID de lava rápido encontrado')
+      return
+    }
     
     setLoading(true)
     try {
+      console.log('📊 Buscando dados para Lava Rápido ID:', id)
       const data: DashboardData = await service.get(Number(id))
       
       setDashboardData({
@@ -32,23 +46,26 @@ export const DashboardClient: React.FC = () => {
         agendamentosPorDia: data.agendamentosPorDia || []
       })
     } catch (error) {
-      console.error('Erro ao buscar dados:', error)
+      console.error('❌ Erro ao buscar dados:', error)
     } finally {
       setLoading(false)
     }
   }
 
+  // 🔥 BUSCA AUTOMÁTICA AO CARREGAR
   useEffect(() => {
-    fetchData(lavaRapidoId)
+    const id = getLavaRapidoId()
+    if (id) {
+      setLavaRapidoId(id)
+      fetchData(id)
+    }
   }, [])
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newId = event.target.value
-    setLavaRapidoId(newId)
-  }
-
   const handleBuscarClick = () => {
-    fetchData(lavaRapidoId)
+    const id = getLavaRapidoId()
+    if (id) {
+      fetchData(id)
+    }
   }
 
   return (
@@ -57,7 +74,6 @@ export const DashboardClient: React.FC = () => {
       agendamentos={dashboardData.agendamentos}
       servicos={dashboardData.servicos}
       lavaRapidoId={lavaRapidoId}
-      onLavaRapidoIdChange={handleInputChange}
       onBuscarClick={handleBuscarClick}
       loading={loading}
       agendamentosPorDia={dashboardData.agendamentosPorDia}
