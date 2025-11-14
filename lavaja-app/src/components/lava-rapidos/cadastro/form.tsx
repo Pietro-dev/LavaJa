@@ -6,28 +6,26 @@ import Link from 'next/link'
 
 interface LavaRapidoFormProps {
     lavaRapido: LavaRapido
-    onSubmit: (lavaRapido: LavaRapido) => void
+    onSubmit: (lavaRapido: LavaRapido | LavaRapidoCadastro) => void
 }
 
-// Interface para cadastro (com senha)
-interface LavaRapidoCadastro extends LavaRapido {
+// Interface para cadastro (com senha, sem id e dataCadastro)
+interface LavaRapidoCadastro extends Omit<LavaRapido, 'id' | 'dataCadastro'> {
     senha: string
 }
 
-// Interface para edição (sem senha)
+// Interface para edição (sem senha, com id e dataCadastro)
 interface LavaRapidoEdicao extends Omit<LavaRapido, 'senha'> {
-    senha?: string
+    senha?: never
 }
 
 const formScheme: LavaRapidoCadastro = {
-    id: '',
     razaoSocial: '',
     cnpj: '',
     endereco: '',
     telefone: '',
     email: '',
-    senha: '',
-    dataCadastro: ''
+    senha: ''
 }
 
 const msgObrigatorio = "Campo obrigatório"
@@ -57,21 +55,27 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
 }) => {
 
     // Função para tratar o envio baseado no contexto (cadastro/edição)
-    const handleSubmit = (values: LavaRapidoCadastro) => {
+    const handleSubmit = (values: LavaRapidoCadastro & { id?: string; dataCadastro?: string }) => {
         console.log('📤 Dados do formulário:', values)
         
         if (values.id) {
-            // 🔥 EDIÇÃO: Remove a senha do payload
+            // 🔄 EDIÇÃO: Remove senha, mantém id e dataCadastro
             const { senha, ...dadosEdicao } = values
-            onSubmit(dadosEdicao as LavaRapido)
+            onSubmit(dadosEdicao as LavaRapidoEdicao)
         } else {
-            // 🔥 CADASTRO: Envia com senha
-            onSubmit(values)
+            // 🆕 CADASTRO: Remove id e dataCadastro, mantém senha
+            const { id, dataCadastro, ...dadosCadastro } = values
+            onSubmit(dadosCadastro as LavaRapidoCadastro)
         }
     }
 
-    const formik = useFormik<LavaRapidoCadastro>({
-        initialValues: { ...formScheme, ...lavaRapido },
+    const formik = useFormik<LavaRapidoCadastro & { id?: string; dataCadastro?: string }>({
+        initialValues: { 
+            ...formScheme, 
+            ...lavaRapido,
+            // Garante que a senha não seja preenchida em edição
+            senha: lavaRapido.id ? '' : formScheme.senha
+        },
         onSubmit: handleSubmit,
         enableReinitialize: true,
         validationSchema: lavaRapido.id ? validationSchemaEdicao : validationSchemaCadastro

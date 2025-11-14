@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/navigation'
-import { DashboardClient } from '../components'
+import { DashboardClient, LoginForm } from '../components'
 
 const Home: React.FC = () => {
   const { isAuthenticated, loading } = useAuth()
@@ -37,7 +37,7 @@ const Home: React.FC = () => {
 
   // 🔥 CORREÇÃO: Só mostra o dashboard se estiver autenticado
   if (isAuthenticated) {
-    return <DashboardClient />
+    return <LoginForm />
   }
 
   // Fallback - nunca deve chegar aqui
