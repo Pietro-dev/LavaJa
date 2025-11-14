@@ -1,0 +1,419 @@
+package io.github.pietro_dev.lavajaapi.services;
+
+import io.github.pietro_dev.lavajaapi.model.Agendamento;
+import io.github.pietro_dev.lavajaapi.model.LavaRapido;
+import io.github.pietro_dev.lavajaapi.model.Servico;
+import io.github.pietro_dev.lavajaapi.model.Status;
+import io.github.pietro_dev.lavajaapi.model.Usuario;
+import io.github.pietro_dev.lavajaapi.model.repository.AgendamentoRepository;
+import io.github.pietro_dev.lavajaapi.model.repository.ServicoRepository;
+import io.github.pietro_dev.lavajaapi.model.repository.UsuarioRepository;
+import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoAtualizarStatusDTO;
+import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoRequestDTO;
+import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoResponseDTO;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class AgendamentoServiceTest {
+
+    @Mock
+    private AgendamentoRepository agendamentoRepository;
+
+    @Mock
+    private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private ServicoRepository servicoRepository;
+
+    @InjectMocks
+    private AgendamentoService agendamentoService;
+
+    @Test
+    void deveCriarAgendamentoComSucesso() {
+        // Arrange
+        LocalDateTime inicio = LocalDateTime.now().plusHours(1);
+        AgendamentoRequestDTO dto = new AgendamentoRequestDTO();
+        dto.setServicoId(1L);
+        dto.setUsuarioId(1L);
+        dto.setInicio(inicio);
+
+        Servico servico = new Servico();
+        servico.setId(1L);
+        servico.setValor(new BigDecimal("50.00"));
+        servico.setDuracao(new BigDecimal("60"));
+
+        LavaRapido lavaRapido = new LavaRapido();
+        lavaRapido.setId(1L);
+        servico.setLavaRapido(lavaRapido);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+
+        Agendamento agendamentoSalvo = new Agendamento();
+        agendamentoSalvo.setId(1L);
+        agendamentoSalvo.setStatus(Status.AGENDADO);
+
+        when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
+        when(agendamentoRepository.findOverlappingForLavaRapido(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(List.of());
+        when(agendamentoRepository.save(any(Agendamento.class))).thenReturn(agendamentoSalvo);
+
+        // Act
+        AgendamentoResponseDTO resultado = agendamentoService.criarAgendamento(dto);
+
+        // Assert
+        assertNotNull(resultado);
+        verify(servicoRepository, times(1)).findById(1L);
+        verify(usuarioRepository, times(1)).findById(1L);
+        verify(agendamentoRepository, times(1)).save(any(Agendamento.class));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoDataInicioForNula() {
+        // Arrange
+        AgendamentoRequestDTO dto = new AgendamentoRequestDTO();
+        dto.setServicoId(1L);
+        dto.setInicio(null); // Data nula
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> agendamentoService.criarAgendamento(dto)
+        );
+
+        assertEquals("A data de início é obrigatória!", exception.getMessage());
+        verify(servicoRepository, never()).findById(anyLong());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoServicoNaoExiste() {
+        // Arrange
+        LocalDateTime inicio = LocalDateTime.now().plusHours(1);
+        AgendamentoRequestDTO dto = new AgendamentoRequestDTO();
+        dto.setServicoId(999L); // ID inexistente
+        dto.setInicio(inicio);
+
+        when(servicoRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> agendamentoService.criarAgendamento(dto)
+        );
+
+        assertEquals("Serviço não encontrado!", exception.getMessage());
+        verify(servicoRepository, times(1)).findById(999L);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoHaConflitoDeHorario() {
+        // Arrange
+        LocalDateTime inicio = LocalDateTime.now().plusHours(1);
+        AgendamentoRequestDTO dto = new AgendamentoRequestDTO();
+        dto.setServicoId(1L);
+        dto.setInicio(inicio);
+
+        Servico servico = new Servico();
+        servico.setId(1L);
+        servico.setDuracao(new BigDecimal("60"));
+
+        LavaRapido lavaRapido = new LavaRapido();
+        lavaRapido.setId(1L);
+        servico.setLavaRapido(lavaRapido);
+
+        Agendamento agendamentoConflitante = new Agendamento();
+
+        when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
+        when(agendamentoRepository.findOverlappingForLavaRapido(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(List.of(agendamentoConflitante));
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> agendamentoService.criarAgendamento(dto)
+        );
+
+        assertEquals("Já existem agendamentos neste horário!", exception.getMessage());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoDataNoPassado() {
+        // Arrange
+        LocalDateTime inicioPassado = LocalDateTime.now().minusHours(1);
+        AgendamentoRequestDTO dto = new AgendamentoRequestDTO();
+        dto.setServicoId(1L);
+        dto.setInicio(inicioPassado);
+
+        Servico servico = new Servico();
+        servico.setId(1L);
+        servico.setDuracao(new BigDecimal("60"));
+
+        LavaRapido lavaRapido = new LavaRapido();
+        lavaRapido.setId(1L);
+        servico.setLavaRapido(lavaRapido);
+
+        when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
+        when(agendamentoRepository.findOverlappingForLavaRapido(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(List.of());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> agendamentoService.criarAgendamento(dto)
+        );
+
+        assertEquals("Não é permitido criar agendamentos no passado", exception.getMessage());
+    }
+
+//    @Test
+//    void deveListarTodosAgendamentos() {
+//        // Arrange
+//        Agendamento agendamento1 = new Agendamento();
+//        agendamento1.setId(1L);
+//        Agendamento agendamento2 = new Agendamento();
+//        agendamento2.setId(2L);
+//
+//        List<Agendamento> agendamentos = Arrays.asList(agendamento1, agendamento2);
+//        when(agendamentoRepository.findAll()).thenReturn(agendamentos);
+//
+//        // Act
+//        List<AgendamentoResponseDTO> resultado = agendamentoService.listar();
+//
+//        // Assert
+//        assertEquals(2, resultado.size());
+//        verify(agendamentoRepository, times(1)).findAll();
+//    }
+//
+//    @Test
+//    void deveBuscarAgendamentoPorId() {
+//        // Arrange
+//        Long agendamentoId = 1L;
+//        Agendamento agendamento = new Agendamento();
+//        agendamento.setId(agendamentoId);
+//
+//        when(agendamentoRepository.findById(agendamentoId)).thenReturn(Optional.of(agendamento));
+//
+//        // Act
+//        AgendamentoResponseDTO resultado = agendamentoService.buscar(agendamentoId);
+//
+//        // Assert
+//        assertNotNull(resultado);
+//        verify(agendamentoRepository, times(1)).findById(agendamentoId);
+//    }
+
+    @Test
+    void deveLancarExcecaoAoBuscarAgendamentoInexistente() {
+        // Arrange
+        Long agendamentoId = 999L;
+        when(agendamentoRepository.findById(agendamentoId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> agendamentoService.buscar(agendamentoId)
+        );
+
+        assertEquals("Agendamento não encontrado com ID: 999", exception.getMessage());
+        verify(agendamentoRepository, times(1)).findById(agendamentoId);
+    }
+
+    @Test
+    void deveDeletarAgendamento() {
+        // Arrange
+        Long agendamentoId = 1L;
+        doNothing().when(agendamentoRepository).deleteById(agendamentoId);
+
+        // Act
+        agendamentoService.deletar(agendamentoId);
+
+        // Assert
+        verify(agendamentoRepository, times(1)).deleteById(agendamentoId);
+    }
+
+//    @Test
+//    void deveAtualizarStatusAgendamento() {
+//        // Arrange
+//        Long agendamentoId = 1L;
+//        Agendamento agendamentoExistente = new Agendamento();
+//        agendamentoExistente.setId(agendamentoId);
+//        agendamentoExistente.setDuracaoMinutos(60);
+//        agendamentoExistente.setHoraInicio(LocalDateTime.now());
+//
+//        AgendamentoAtualizarStatusDTO dto = new AgendamentoAtualizarStatusDTO();
+//        dto.setStatus(Status.CONFIRMADO);
+//        dto.setInicio(LocalDateTime.now().plusHours(2));
+//
+//        Agendamento agendamentoAtualizado = new Agendamento();
+//        agendamentoAtualizado.setId(agendamentoId);
+//        agendamentoAtualizado.setStatus(Status.CONFIRMADO);
+//
+//        when(agendamentoRepository.findById(agendamentoId)).thenReturn(Optional.of(agendamentoExistente));
+//        when(agendamentoRepository.save(any(Agendamento.class))).thenReturn(agendamentoAtualizado);
+//
+//        // Act
+//        AgendamentoResponseDTO resultado = agendamentoService.atualizar(agendamentoId, dto);
+//
+//        // Assert
+//        assertNotNull(resultado);
+//        verify(agendamentoRepository, times(1)).findById(agendamentoId);
+//        verify(agendamentoRepository, times(1)).save(any(Agendamento.class));
+//    }
+
+    @Test
+    void deveBuscarAgendamentosPorUsuario() {
+        // Arrange
+        Long usuarioId = 1L;
+        Agendamento agendamento1 = new Agendamento();
+        Agendamento agendamento2 = new Agendamento();
+        List<Agendamento> agendamentos = Arrays.asList(agendamento1, agendamento2);
+
+        when(agendamentoRepository.findAgendamentosPorUsuario(usuarioId)).thenReturn(agendamentos);
+
+        // Act
+        List<Agendamento> resultado = agendamentoService.buscarAgendamentosPorUsuario(usuarioId);
+
+        // Assert
+        assertEquals(2, resultado.size());
+        verify(agendamentoRepository, times(1)).findAgendamentosPorUsuario(usuarioId);
+    }
+
+    @Test
+    void deveBuscarAgendamentosPorLavaRapido() {
+        // Arrange
+        Long lavaRapidoId = 1L;
+        Agendamento agendamento1 = new Agendamento();
+        Agendamento agendamento2 = new Agendamento();
+        List<Agendamento> agendamentos = Arrays.asList(agendamento1, agendamento2);
+
+        when(agendamentoRepository.findAgendamentosPorLavaRapido(lavaRapidoId)).thenReturn(agendamentos);
+
+        // Act
+        List<Agendamento> resultado = agendamentoService.buscarAgendamentosPorLavaRapidoId(lavaRapidoId);
+
+        // Assert
+        assertEquals(2, resultado.size());
+        verify(agendamentoRepository, times(1)).findAgendamentosPorLavaRapido(lavaRapidoId);
+    }
+
+//    @Test
+//    void deveCriarAgendamentoSemUsuario() {
+//        // Arrange
+//        LocalDateTime inicio = LocalDateTime.now().plusHours(1);
+//        AgendamentoRequestDTO dto = new AgendamentoRequestDTO();
+//        dto.setServicoId(1L);
+//        dto.setUsuarioId(null); // Usuário nulo
+//        dto.setInicio(inicio);
+//
+//        Servico servico = new Servico();
+//        servico.setId(1L);
+//        servico.setValor(new BigDecimal("50.00"));
+//        servico.setDuracao(new BigDecimal("60"));
+//
+//        LavaRapido lavaRapido = new LavaRapido();
+//        lavaRapido.setId(1L);
+//        servico.setLavaRapido(lavaRapido);
+//
+//        Agendamento agendamentoSalvo = new Agendamento();
+//        agendamentoSalvo.setId(1L);
+//
+//        when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
+//        when(agendamentoRepository.findOverlappingForLavaRapido(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+//                .thenReturn(List.of());
+//        when(agendamentoRepository.save(any(Agendamento.class))).thenReturn(agendamentoSalvo);
+//
+//        // Act
+//        AgendamentoResponseDTO resultado = agendamentoService.criarAgendamento(dto);
+//
+//        // Assert
+//        assertNotNull(resultado);
+//        verify(usuarioRepository, never()).findById(anyLong());
+//        verify(agendamentoRepository, times(1)).save(any(Agendamento.class));
+//    }
+//
+//    @Test
+//    void deveCriarAgendamentoComDuracaoPadraoQuandoNula() {
+//        // Arrange
+//        LocalDateTime inicio = LocalDateTime.now().plusHours(1);
+//        AgendamentoRequestDTO dto = new AgendamentoRequestDTO();
+//        dto.setServicoId(1L);
+//        dto.setUsuarioId(1L);
+//        dto.setInicio(inicio);
+//
+//        Servico servico = new Servico();
+//        servico.setId(1L);
+//        servico.setValor(new BigDecimal("50.00"));
+//        servico.setDuracao(null); // Duração nula - deve usar padrão 30
+//
+//        LavaRapido lavaRapido = new LavaRapido();
+//        lavaRapido.setId(1L);
+//        servico.setLavaRapido(lavaRapido);
+//
+//        Usuario usuario = new Usuario();
+//        usuario.setId(1L);
+//
+//        Agendamento agendamentoSalvo = new Agendamento();
+//        agendamentoSalvo.setId(1L);
+//
+//        when(servicoRepository.findById(1L)).thenReturn(Optional.of(servico));
+//        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
+//        when(agendamentoRepository.findOverlappingForLavaRapido(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+//                .thenReturn(List.of());
+//        when(agendamentoRepository.save(any(Agendamento.class))).thenReturn(agendamentoSalvo);
+//
+//        // Act
+//        AgendamentoResponseDTO resultado = agendamentoService.criarAgendamento(dto);
+//
+//        // Assert
+//        assertNotNull(resultado);
+//        // Verifica que a duração padrão de 30 minutos foi usada
+//        verify(agendamentoRepository).findOverlappingForLavaRapido(eq(1L), eq(inicio), eq(inicio.plusMinutes(30)));
+//    }
+//
+//    @Test
+//    void deveAtualizarAgendamentoComNovoHorario() {
+//        // Arrange
+//        Long agendamentoId = 1L;
+//        Agendamento agendamentoExistente = new Agendamento();
+//        agendamentoExistente.setId(agendamentoId);
+//        agendamentoExistente.setDuracaoMinutos(60);
+//        agendamentoExistente.setHoraInicio(LocalDateTime.now());
+//
+//        LocalDateTime novoInicio = LocalDateTime.now().plusDays(1);
+//        AgendamentoAtualizarStatusDTO dto = new AgendamentoAtualizarStatusDTO();
+//        dto.setStatus(Status.CONFIRMADO);
+//        dto.setInicio(novoInicio);
+//
+//        Agendamento agendamentoAtualizado = new Agendamento();
+//        agendamentoAtualizado.setId(agendamentoId);
+//        agendamentoAtualizado.setStatus(Status.CONFIRMADO);
+//        agendamentoAtualizado.setHoraInicio(novoInicio);
+//        agendamentoAtualizado.setHoraFim(novoInicio.plusMinutes(60));
+//
+//        when(agendamentoRepository.findById(agendamentoId)).thenReturn(Optional.of(agendamentoExistente));
+//        when(agendamentoRepository.save(any(Agendamento.class))).thenReturn(agendamentoAtualizado);
+//
+//        // Act
+//        AgendamentoResponseDTO resultado = agendamentoService.atualizar(agendamentoId, dto);
+//
+//        // Assert
+//        assertNotNull(resultado);
+//        verify(agendamentoRepository, times(1)).findById(agendamentoId);
+//        verify(agendamentoRepository, times(1)).save(any(Agendamento.class));
+//    }
+}
