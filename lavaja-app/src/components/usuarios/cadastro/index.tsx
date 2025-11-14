@@ -22,14 +22,22 @@ export const CadastroUsuarios: React.FC = () => {
         }
     }, [queryId])
 
-    const handleSubmit = (usuario: Usuario) => {
+    const handleSubmit = (dados: any) => {
         if(usuario.id){
-            service.atualizar(usuario).then(response => {
-                setMessages([
-                    {texto: "Usuário atualizado com sucesso!", tipo: "success", titulo: "Sucesso!"}
-                ])
-            })
-        }else {
+        // ✅ Agora envia apenas os dados corretos
+        const dadosUpdate = {
+            id: usuario.id,
+            nome: dados.nome,
+            email: dados.email
+        }
+        
+        service.atualizarAdm(dadosUpdate).then(response => {
+            console.log('✅ Dados enviados para update:', dadosUpdate)
+            setMessages([
+                {texto: "Usuário atualizado com sucesso!", tipo: "success", titulo: "Sucesso!"}
+            ])
+        })
+    } else {
             service.salvar(usuario).then(usuarioSalvo => {
                 setUsuario(usuarioSalvo)
                 setMessages([

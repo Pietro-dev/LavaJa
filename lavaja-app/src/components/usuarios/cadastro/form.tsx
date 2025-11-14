@@ -1,102 +1,184 @@
-import { Input } from "components/common"
-import Link from "next/link"
-import { Usuario } from "app/models/usuarios"
+import { Usuario } from 'app/models/usuarios'
+import { useFormik } from 'formik'
+import { Input } from 'components'
 import * as Yup from 'yup'
-import { useFormik } from "formik"
+import Link from 'next/link'
 
-interface UsuarioFormProps{
+interface UsuarioFormProps {
     usuario: Usuario
-    onSubmit: (Usuario: Usuario) => void
+    onSubmit: (usuario: any) => void
 }
 
-const formScheme: Usuario = {
+interface UsuarioFormValues {
+    id: string
+    nome: string
+    email: string
+    senha: string // Apenas para cadastro
+    dataCadastro: string
+    role: string
+}
+
+const formScheme: UsuarioFormValues = {
     id: '',
     nome: '',
     email: '',
     senha: '',
     dataCadastro: '',
+    role: ''
 }
 
 const msgObrigatorio = "Campo obrigatório"
 
-const validationSchema = Yup.object().shape({
+// Schema de validação para CADASTRO
+const validationSchemaCadastro = Yup.object().shape({
     nome: Yup.string().trim().required(msgObrigatorio),
     email: Yup.string().trim().required(msgObrigatorio).email("E-mail inválido!"),
-    senha: Yup.string().trim().required(msgObrigatorio),
+    senha: Yup.string().trim().required(msgObrigatorio).min(6, 'A senha deve ter pelo menos 6 caracteres'),
+})
+
+// Schema de validação para EDIÇÃO (sem campos de senha)
+const validationSchemaEdicao = Yup.object().shape({
+    nome: Yup.string().trim().required(msgObrigatorio),
+    email: Yup.string().trim().required(msgObrigatorio).email("E-mail inválido!"),
 })
 
 export const FormCadastroUsuarios: React.FC<UsuarioFormProps> = ({
     usuario,
     onSubmit
 }) => {
-    
-    const formik = useFormik<Usuario>({
+
+    const handleSubmit = (values: UsuarioFormValues) => {
+        console.log('📤 Dados do formulário:', values)
+        
+        if (values.id) {
+            // 🔥 EDIÇÃO: Apenas nome e email (sem senha)
+            const dadosEdicao = {
+                nome: values.nome,
+                email: values.email
+            }
+            onSubmit(dadosEdicao)
+        } else {
+            // 🔥 CADASTRO: Com senha
+            const dadosCadastro = {
+                nome: values.nome,
+                email: values.email,
+                senha: values.senha,
+                role: values.role || 'CLIENTE'
+            }
+            onSubmit(dadosCadastro)
+        }
+    }
+
+    const formik = useFormik<UsuarioFormValues>({
         initialValues: { ...formScheme, ...usuario },
-        onSubmit,
+        onSubmit: handleSubmit,
         enableReinitialize: true,
-        validationSchema: validationSchema
+        validationSchema: usuario.id ? validationSchemaEdicao : validationSchemaCadastro
     })
 
-    console.log(formik.errors)
-
-    return(
+    return (
         <form onSubmit={formik.handleSubmit}>
-            {formik.values.id && 
-                <div className="field is-horizontal">
-                    <Input onChange={formik.handleChange} value={formik.values.id} label="Código:" id="codigo" name="codigo" columnClasses="is-half" disabled></Input>
-                    <Input onChange={formik.handleChange} value={formik.values.dataCadastro} label="Data de Cadastro:" id="dataCadastro" name="dataCadastro" columnClasses="is-half" disabled></Input>
+            {formik.values.id &&
+                <div className="field is-horizontal"> 
+                    <Input 
+                        className='input is-half'
+                        id='id' 
+                        name='id' 
+                        label='Código:' 
+                        onChange={formik.handleChange} 
+                        value={formik.values.id}
+                        autoComplete='off'
+                        disabled
+                    />
+                    <Input 
+                        className='input is-half'
+                        id='dataCadastro' 
+                        name='dataCadastro' 
+                        label='Data de cadastro:' 
+                        onChange={formik.handleChange} 
+                        value={formik.values.dataCadastro}
+                        autoComplete='off'
+                        disabled
+                    />
                 </div>
             }
+            
             <div className="field">
-                <Input
+                <Input 
+                    className='input is-full'
+                    id='nome' 
+                    name='nome' 
+                    label='Nome Completo:' 
                     onChange={formik.handleChange} 
                     value={formik.values.nome}
-                    label="Nome: "
-                    id="nome"
-                    name="nome"
-                    columnClasses="is-half"
-                    type="text"
-                    placeholder="Insira seu nome completo"
+                    autoComplete='off'
                     error={formik.errors.nome}
                 />
-                <Input
+            </div>
+            
+            <div className="field">
+                <Input 
+                    className='input is-full'
+                    id='email' 
+                    name='email' 
+                    label='E-mail:' 
                     onChange={formik.handleChange} 
                     value={formik.values.email}
-                    label="E-mail: "
-                    id="email"
-                    name="email"
-                    columnClasses="is-half"
-                    type="text"
-                    placeholder="Insira seu melhor e-mail"
+                    autoComplete='off'
                     error={formik.errors.email}
                 />
-                {!formik.values.id &&
-                    <Input
-                    onChange={formik.handleChange} 
-                    value={formik.values.senha}
-                    label="Senha: "
-                    id="senha"
-                    name="senha"
-                    columnClasses="is-half"
-                    type="password"
-                    placeholder="Crie uma senha"
-                    error={formik.errors.senha}
-                />
-                }
             </div>
+
+            {formik.values.id && formik.values.role && (
+                <div className="field">
+                    <Input 
+                        className='input is-full'
+                        id='role' 
+                        name='role' 
+                        label='Perfil:' 
+                        onChange={formik.handleChange} 
+                        value={formik.values.role}
+                        autoComplete='off'
+                        disabled
+                    />
+                </div>
+            )}
+            
+            {/* 🔥 APENAS NO CADASTRO */}
+            {!formik.values.id && (
+                <div className="field">
+                    <Input 
+                        className='input is-full'
+                        id='senha' 
+                        name='senha' 
+                        label='Senha:' 
+                        type='password'
+                        onChange={formik.handleChange} 
+                        value={formik.values.senha}
+                        autoComplete='off'
+                        error={formik.errors.senha}
+                        placeholder="Mínimo 6 caracteres"
+                    />
+                </div>
+            )}
+            
             <div className="field is-grouped">
                 <div className="control">
-                    <button className="button is-primary is-dark">
+                    <button 
+                        type="submit"
+                        className="button is-primary is-dark"
+                    >
                         {formik.values.id ? "Atualizar" : "Salvar"}
                     </button>
                 </div>
                 <div className="control">
                     <Link href="/consultas/usuarios">
-                        <button className="button">Voltar</button>
+                        <button type="button" className="button">
+                            Voltar
+                        </button>
                     </Link>
                 </div>
             </div>
         </form>
     )
-
 }
