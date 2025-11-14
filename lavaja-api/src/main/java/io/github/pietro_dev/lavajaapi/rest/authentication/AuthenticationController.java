@@ -1,26 +1,25 @@
 package io.github.pietro_dev.lavajaapi.rest.authentication;
 
 import io.github.pietro_dev.lavajaapi.infra.security.TokenService;
+import io.github.pietro_dev.lavajaapi.model.LavaRapido;
 import io.github.pietro_dev.lavajaapi.model.Usuario;
+import io.github.pietro_dev.lavajaapi.model.repository.LavaRapidoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.UsuarioRepository;
-import io.github.pietro_dev.lavajaapi.rest.usuarios.LoginResponseDTO;
-import io.github.pietro_dev.lavajaapi.rest.usuarios.UsuarioFormCadastroRequest;
-import io.github.pietro_dev.lavajaapi.rest.usuarios.UsuarioFormLoginRequest;
-import io.github.pietro_dev.lavajaapi.rest.usuarios.UsuarioFormRequest;
+import io.github.pietro_dev.lavajaapi.rest.lavarapidos.LavaRapidoFormRequest;
+import io.github.pietro_dev.lavajaapi.rest.lavarapidos.LavaRapidoLoginResponseDTO;
+import io.github.pietro_dev.lavajaapi.rest.lavarapidos.LavaRapidoResponseDTO;
+import io.github.pietro_dev.lavajaapi.rest.usuarios.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+//@CrossOrigin("*")
 public class AuthenticationController {
 
     @Autowired
@@ -29,6 +28,8 @@ public class AuthenticationController {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private LavaRapidoRepository lavaRapidoRepository;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid UsuarioFormLoginRequest data){
@@ -36,7 +37,33 @@ public class AuthenticationController {
         var auth = this.authenticationManager.authenticate(usuarioDataLogin);
         var token = tokenService.generateToken((Usuario) auth.getPrincipal());
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        Usuario usuario = usuarioRepository.findUsuarioOptByEmail(data.email()).orElse(null);
+
+        return ResponseEntity.ok(new UsuarioLoginResponseDTO(token, usuario.getId()));
+    }
+
+    @PostMapping("/login/lava-rapidos")
+    public ResponseEntity loginLavaRapido(@RequestBody @Valid UsuarioFormLoginRequest data) {
+        try {
+            System.out.println("Até aqui funcinou");
+            // Busca diretamente no repositório de LavaRapido
+            LavaRapido lavaRapido = lavaRapidoRepository.findLavaRapidoByEmail(data.email())
+                    .orElseThrow(() -> new RuntimeException("Lava Rápido não encontrado!"));
+
+            // Verifica a senha manualmente
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            if (!passwordEncoder.matches(data.senha(), lavaRapido.getSenha())) {
+                return ResponseEntity.badRequest().body("Senha inválida!");
+            }
+
+            // Gera o token específico para LavaRapido
+            var token = tokenService.generateLavaRapidoToken(lavaRapido);
+
+            return ResponseEntity.ok(new LavaRapidoLoginResponseDTO(token, lavaRapido.getId()));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/cadastro")
@@ -45,10 +72,23 @@ public class AuthenticationController {
 
         String senhaCriptografada = new BCryptPasswordEncoder().encode(data.senha());
 
-        Usuario newUsuario = new Usuario(data.nome(), data.email(), senhaCriptografada);
+        Usuario newUsuario = new Usuario(data.nome(), data.email(), senhaCriptografada, data.role());
 
         usuarioRepository.save(newUsuario);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new UsuarioResponseDTO(newUsuario));
+    }
+
+    @PostMapping("/cadastro/lava-rapidos")
+    public  ResponseEntity cadastroLavaRapido(@RequestBody @Valid LavaRapidoFormRequest data){
+        if(lavaRapidoRepository.findByEmail(data.getEmail()) != null) return ResponseEntity.badRequest().body("E-mail já cadastrado!");
+
+        String senhaCriptografada = new BCryptPasswordEncoder().encode(data.getSenha());
+        data.setSenha(senhaCriptografada);
+        LavaRapido newLavaRapido = new LavaRapido(data);
+
+        lavaRapidoRepository.save(newLavaRapido);
+
+        return ResponseEntity.ok(new LavaRapidoResponseDTO(newLavaRapido));
     }
 }
