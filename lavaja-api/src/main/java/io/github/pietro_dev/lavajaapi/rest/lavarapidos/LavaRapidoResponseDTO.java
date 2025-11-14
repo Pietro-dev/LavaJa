@@ -1,10 +1,13 @@
 package io.github.pietro_dev.lavajaapi.rest.lavarapidos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.pietro_dev.lavajaapi.model.LavaRapido;
 import io.github.pietro_dev.lavajaapi.rest.servicos.ServicoResponseDTO;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class LavaRapidoResponseDTO {
@@ -33,5 +36,15 @@ public class LavaRapidoResponseDTO {
         this.email = email;
         this.dataCadastro = dataCadastro;
         this.servicos = servicos;
+    }
+
+    public LavaRapidoResponseDTO(LavaRapido lavaRapido) {
+        this.id = lavaRapido.getId();
+        this.razaoSocial = lavaRapido.getRazaoSocial();
+        this.cnpj = lavaRapido.getCnpj();
+        this.email = lavaRapido.getEmail();
+        this.endereco = lavaRapido.getEndereco();
+        this.telefone = lavaRapido.getTelefone();
+        this.dataCadastro = lavaRapido.getDataCadastro();
     }
 }
