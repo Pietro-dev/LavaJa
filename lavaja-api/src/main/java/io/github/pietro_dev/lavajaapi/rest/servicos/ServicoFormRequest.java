@@ -35,7 +35,15 @@ public class ServicoFormRequest {
     }
 
     public Servico toModel(){
-        return new Servico(id, servico, descricao, valor, duracao, dataCadastro);
+        Servico servico = new Servico(id, this.servico, descricao, valor, duracao, dataCadastro);
+
+        if (lavaRapidoId != null) {
+            LavaRapido lavaRapido = new LavaRapido();
+            lavaRapido.setId(lavaRapidoId);
+            servico.setLavaRapido(lavaRapido);
+        }
+
+        return servico;
     }
 
     public static ServicoFormRequest fromModel(Servico servico){

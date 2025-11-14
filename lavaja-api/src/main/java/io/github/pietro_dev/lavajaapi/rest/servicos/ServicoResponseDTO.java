@@ -1,6 +1,7 @@
 package io.github.pietro_dev.lavajaapi.rest.servicos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.pietro_dev.lavajaapi.model.Servico;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -28,5 +29,14 @@ public class ServicoResponseDTO {
         this.valor = valor;
         this.duracao = duracao;
         this.dataCadastro = dataCadastro;
+    }
+
+    public ServicoResponseDTO(Servico servico) {
+        this.id = servico.getId();
+        this.servico = servico.getServico();
+        this.descricao = servico.getDescricao();
+        this.valor = servico.getValor();
+        this.duracao = servico.getDuracao();
+        this.dataCadastro = servico.getDataCadastro();
     }
 }
