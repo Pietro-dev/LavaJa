@@ -7,6 +7,7 @@ interface LayoutProps {
     titulo?: string  
     children?: ReactNode
     mensagens?: Array<Alert>
+    subtitulo?: string
 }
 
 export const Layout: React.FC<LayoutProps> = (props: LayoutProps)=>{
@@ -22,7 +23,12 @@ export const Layout: React.FC<LayoutProps> = (props: LayoutProps)=>{
                                 <div className="card-content">
                                 <p className="title">
                                   {props.titulo}  
-                                </p>                                   
+                                </p>  
+                                {props.subtitulo && (
+                                    <p className="subtitle is-5 has-text-grey">
+                                    {props.subtitulo}
+                                    </p>
+                                )}                                 
                                 </div>
                             </header>
                             <div className="card-content">
