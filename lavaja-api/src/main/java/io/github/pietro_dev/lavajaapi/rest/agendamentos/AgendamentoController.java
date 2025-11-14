@@ -1,5 +1,6 @@
 package io.github.pietro_dev.lavajaapi.rest.agendamentos;
 
+import io.github.pietro_dev.lavajaapi.model.Agendamento;
 import io.github.pietro_dev.lavajaapi.services.AgendamentoService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api/agendamentos")
 @RestController
@@ -31,6 +33,24 @@ public class AgendamentoController {
     @GetMapping("/{id}")
     public ResponseEntity<AgendamentoResponseDTO> buscar(@PathVariable Long id){
         return ResponseEntity.ok(agendamentoService.buscar(id));
+    }
+
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<AgendamentoResponseDTO>> getAgendamentosPorUsuario(@PathVariable Long usuarioId) {
+        List<Agendamento> agendamentos = agendamentoService.buscarAgendamentosPorUsuario(usuarioId);
+        List<AgendamentoResponseDTO> response = agendamentos.stream()
+                .map(AgendamentoResponseDTO:: new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/lavaRapido/{lavaRapidoId}")
+    public ResponseEntity<List<AgendamentoResponseDTO>> getAgendamentosPorLavaRapidoId(@PathVariable Long lavaRapidoId) {
+        List<Agendamento> agendamentos = agendamentoService.buscarAgendamentosPorLavaRapidoId(lavaRapidoId);
+        List<AgendamentoResponseDTO> response = agendamentos.stream()
+                .map(AgendamentoResponseDTO:: new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
