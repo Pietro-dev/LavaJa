@@ -6,5 +6,6 @@ export interface LavaRapido {
     telefone?: string,
     email?: string,
     senha?: string,
-    dataCadastro?: string
+    dataCadastro?: string,
+    aceitaTermos?: boolean
 }
