@@ -1,6 +1,7 @@
 package io.github.pietro_dev.lavajaapi.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.pietro_dev.lavajaapi.rest.lavarapidos.LavaRapidoFormRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -57,4 +58,15 @@ public class LavaRapido {
         this.email = email;
         this.senha = senha;
     }
+
+    public LavaRapido(LavaRapidoFormRequest formRequest) {
+        this.razaoSocial = formRequest.getRazaoSocial();
+        this.cnpj = formRequest.getCnpj();
+        this.endereco = formRequest.getEndereco();
+        this.telefone = formRequest.getTelefone();
+        this.email = formRequest.getEmail();
+        this.senha = formRequest.getSenha();
+        this.role = UsuarioRole.LAVARAPIDO;
+    }
+
 }
