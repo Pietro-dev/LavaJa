@@ -31,7 +31,6 @@ public class Usuario implements UserDetails {
     @PrePersist
     public void prePersist(){
         setDataCadastro(LocalDate.now());
-        setRole(UsuarioRole.CLIENTE);
     }
 
     public Usuario(){
@@ -51,12 +50,13 @@ public class Usuario implements UserDetails {
         this.senha = senha;
     }
 
-    public Usuario(Long id, String nome, String email, String senha, LocalDate dataCadastro) {
+    public Usuario(Long id, String nome, String email, String senha, LocalDate dataCadastro, UsuarioRole role) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.dataCadastro = dataCadastro;
+        this.role = role;
     }
 
     @Override

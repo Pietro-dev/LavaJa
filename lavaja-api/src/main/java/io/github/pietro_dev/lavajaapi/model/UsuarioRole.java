@@ -2,7 +2,8 @@ package io.github.pietro_dev.lavajaapi.model;
 
 public enum UsuarioRole {
     ADMIN("admin"),
-    CLIENTE("cliente");
+    CLIENTE("cliente"),
+    LAVARAPIDO("lava_rapido");
 
     private String role;
 
