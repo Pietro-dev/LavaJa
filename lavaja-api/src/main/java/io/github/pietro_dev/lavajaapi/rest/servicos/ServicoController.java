@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,6 +64,23 @@ public class ServicoController {
         var servico = servicoExistente.map(ServicoFormRequest::fromModel).get();
 
         return ResponseEntity.ok(servico);
+    }
+
+    @GetMapping("/{lavaRapidoId}/servicos")
+    public ResponseEntity<List<ServicoResponseDTO>> listarServicosPorLavaRapidoId(
+            @PathVariable Long lavaRapidoId) {
+
+        List<Servico> servicos = servicoService.findByLavaRapidoId(lavaRapidoId);
+
+        if (servicos.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        List<ServicoResponseDTO> lista = servicos.stream()
+                .map(ServicoResponseDTO::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(lista);
     }
 
     @DeleteMapping("{id}")

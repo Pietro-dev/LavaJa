@@ -3,10 +3,16 @@ package io.github.pietro_dev.lavajaapi.rest.lavarapidos;
 import io.github.pietro_dev.lavajaapi.model.LavaRapido;
 import io.github.pietro_dev.lavajaapi.model.repository.LavaRapidoRepository;
 import io.github.pietro_dev.lavajaapi.services.LavaRapidoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.Encoder;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,23 +28,53 @@ public class LavaRapidoController {
     @Autowired
     private LavaRapidoService lavaRapidoService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping
-    public ResponseEntity salvar(@RequestBody LavaRapidoFormRequest request){
-        LavaRapido lavaRapido = request.toModel();
-        lavaRapidoRepository.save(lavaRapido);
-        return ResponseEntity.ok(LavaRapidoFormRequest.fromModel(lavaRapido));
+    public ResponseEntity<Object> salvar(@Valid @RequestBody LavaRapidoFormRequest request) {
+        try {
+            // Validação de email único
+            if (lavaRapidoRepository.existsByEmail(request.getEmail())) {
+                return ResponseEntity.badRequest()
+                        .body("Já existe um lava-rápido cadastrado com este email: " + request.getEmail());
+            }
+
+            LavaRapido lavaRapido = request.toModel();
+            lavaRapido.setSenha(passwordEncoder.encode(request.getSenha()));
+
+            LavaRapido lavaRapidoSalvo = lavaRapidoRepository.save(lavaRapido);
+            return ResponseEntity.status(HttpStatus.CREATED).body(LavaRapidoFormRequest.fromModel(lavaRapidoSalvo));
+
+        } catch (Exception e) {
+
+            return ResponseEntity.internalServerError().body("Erro interno no servidor");
+        }
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Long id, @RequestBody LavaRapidoFormRequest request){
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizar(@PathVariable Long id, @RequestBody LavaRapidoFormRequest request) {
         Optional<LavaRapido> lavaRapidoExistente = lavaRapidoRepository.findById(id);
-        if(lavaRapidoExistente.isEmpty()){
+        if (lavaRapidoExistente.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        LavaRapido lavaRapido = request.toModel();
-        lavaRapido.setId(id);
-        lavaRapidoRepository.save(lavaRapido);
+        LavaRapido lavaRapidoAtual = lavaRapidoExistente.get();
+        LavaRapido lavaRapidoNovo = request.toModel();
+
+        // Atualiza todos os campos exceto a senha (se estiver vazia ou null)
+        lavaRapidoAtual.setRazaoSocial(lavaRapidoNovo.getRazaoSocial());
+        lavaRapidoAtual.setCnpj(lavaRapidoNovo.getCnpj());
+        lavaRapidoAtual.setEndereco(lavaRapidoNovo.getEndereco());
+        lavaRapidoAtual.setTelefone(lavaRapidoNovo.getTelefone());
+        lavaRapidoAtual.setEmail(lavaRapidoNovo.getEmail());
+
+        // Só atualiza a senha se foi fornecida uma nova
+        if (lavaRapidoNovo.getSenha() != null && !lavaRapidoNovo.getSenha().trim().isEmpty()) {
+            lavaRapidoAtual.setSenha(lavaRapidoNovo.getSenha());
+        }
+
+        lavaRapidoRepository.save(lavaRapidoAtual);
         return ResponseEntity.noContent().build();
     }
 
@@ -62,8 +98,8 @@ public class LavaRapidoController {
     }
 
     @GetMapping
-    public List<LavaRapidoFormRequest> getLista(){
-        return lavaRapidoRepository.findAll().stream().map(LavaRapidoFormRequest::fromModel).collect(Collectors.toList());
+    public List<LavaRapidoResponseDTO> getLista(){
+        return lavaRapidoRepository.findAll().stream().map(LavaRapidoResponseDTO::new).collect(Collectors.toList());
     }
 
     @GetMapping("/com-servicos")
