@@ -29,6 +29,12 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
   const [senhaAtual, setSenhaAtual] = useState('')
   const [novaSenha, setNovaSenha] = useState('')
   const [confirmarSenha, setConfirmarSenha] = useState('')
+  
+  // Estados para a funcionalidade de deletar conta
+  const [modalDeletarAberto, setModalDeletarAberto] = useState(false)
+  const [confirmacaoDeletar, setConfirmacaoDeletar] = useState('')
+  const [senhaDeletar, setSenhaDeletar] = useState('')
+  const [deletando, setDeletando] = useState(false)
 
   const getLoggedInUserId = (): number | undefined => {
     if (typeof window === 'undefined') return undefined
@@ -187,6 +193,80 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
     }
   }
 
+  // 🔥 NOVAS FUNÇÕES PARA DELETAR CONTA
+  const abrirModalDeletar = () => {
+    setModalDeletarAberto(true)
+    setConfirmacaoDeletar('')
+    setSenhaDeletar('')
+  }
+
+  const fecharModalDeletar = () => {
+    setModalDeletarAberto(false)
+    setConfirmacaoDeletar('')
+    setSenhaDeletar('')
+    setDeletando(false)
+  }
+
+  const handleDeletarConta = async () => {
+    try {
+      if (!usuario) return
+
+      // Validações
+      if (confirmacaoDeletar !== 'DELETAR MINHA CONTA') {
+        alert('Por favor, digite exatamente "DELETAR MINHA CONTA" para confirmar.')
+        return
+      }
+
+      if (!senhaDeletar) {
+        alert('Por favor, informe sua senha para confirmar a exclusão.')
+        return
+      }
+
+      setDeletando(true)
+
+      console.log('🗑️ Iniciando exclusão da conta...')
+
+      // 🔥 CHAMA A API PARA DELETAR A CONTA
+      // Supondo que sua API aceite DELETE em /api/usuarios/{id}
+      // e precise da senha para confirmar
+      await httpClient.delete(`/api/usuarios/${usuario.id}`, {
+        data: {
+          senha: senhaDeletar
+        }
+      })
+
+      console.log('✅ Conta deletada com sucesso')
+
+      // 🔥 LIMPA OS DADOS DO LOCALSTORAGE
+      localStorage.removeItem('usuarioId')
+      localStorage.removeItem('token') // se você armazena token
+      localStorage.removeItem('userData') // se você armazena outros dados
+
+      alert('Sua conta foi deletada com sucesso. Sentiremos sua falta!')
+
+      // 🔥 REDIRECIONA PARA A PÁGINA INICIAL
+      router.push('/')
+
+    } catch (error: any) {
+      console.error('❌ Erro ao deletar conta:', error)
+      
+      if (error.response?.data) {
+        const errorMessage = error.response.data.message || error.response.data
+        
+        if (errorMessage.includes('senha') || error.response.status === 401) {
+          alert('Senha incorreta. Verifique e tente novamente.')
+          setSenhaDeletar('')
+        } else {
+          alert(`Erro ao deletar conta: ${errorMessage}`)
+        }
+      } else {
+        alert('Erro ao deletar conta. Tente novamente.')
+      }
+    } finally {
+      setDeletando(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="section">
@@ -258,12 +338,20 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
                     <div className="level-right">
                       <div className="level-item">
                         {!editando ? (
-                          <button 
-                            className="button is-primary is-dark"
-                            onClick={handleEditar}
-                          >
-                            <span>Editar Perfil</span>
-                          </button>
+                          <div className="buttons">
+                            <button 
+                              className="button is-primary is-dark"
+                              onClick={handleEditar}
+                            >
+                              <span>Editar Perfil</span>
+                            </button>
+                            <button 
+                              className="button is-danger is-outlined"
+                              onClick={abrirModalDeletar}
+                            >
+                              <span>Deletar Conta</span>
+                            </button>
+                          </div>
                         ) : (
                           <div className="buttons">
                             <button 
@@ -405,6 +493,85 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
           </div>
         </div>
       </div>
+
+      {/* 🔥 MODAL PARA CONFIRMAR EXCLUSÃO DA CONTA */}
+      {modalDeletarAberto && (
+        <div className="modal is-active">
+          <div className="modal-background" onClick={fecharModalDeletar}></div>
+          <div className="modal-card">
+            <header className="modal-card-head">
+              <p className="modal-card-title">Deletar Conta Permanentemente</p>
+              <button 
+                className="delete" 
+                aria-label="close"
+                onClick={fecharModalDeletar}
+                disabled={deletando}
+              ></button>
+            </header>
+            <section className="modal-card-body">
+              <div className="content">
+                <div className="notification is-danger is-light">
+                  <strong>Atenção! Esta ação é irreversível.</strong>
+                  <br />
+                  Todos os seus dados serão permanentemente excluídos e não poderão ser recuperados.
+                </div>
+
+                <div className="field">
+                  <label className="label">
+                    Digite <code>DELETAR MINHA CONTA</code> para confirmar:
+                  </label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="text"
+                      value={confirmacaoDeletar}
+                      onChange={(e) => setConfirmacaoDeletar(e.target.value)}
+                      disabled={deletando}
+                      placeholder="DELETAR MINHA CONTA"
+                    />
+                  </div>
+                </div>
+
+                <div className="field">
+                  <label className="label">
+                    Sua Senha <span className="has-text-danger">*</span>
+                  </label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="password"
+                      value={senhaDeletar}
+                      onChange={(e) => setSenhaDeletar(e.target.value)}
+                      disabled={deletando}
+                      placeholder="Digite sua senha atual"
+                      required
+                    />
+                  </div>
+                  <p className="help has-text-danger">
+                    Necessária para confirmar a exclusão
+                  </p>
+                </div>
+              </div>
+            </section>
+            <footer className="modal-card-foot">
+              <button 
+                className="button is-danger"
+                onClick={handleDeletarConta}
+                disabled={deletando || confirmacaoDeletar !== 'DELETAR MINHA CONTA' || !senhaDeletar}
+              >
+                {deletando ? 'Deletando...' : 'Deletar Minha Conta Permanentemente'}
+              </button>
+              <button 
+                className="button"
+                onClick={fecharModalDeletar}
+                disabled={deletando}
+              >
+                Cancelar
+              </button>
+            </footer>
+          </div>
+        </div>
+      )}
     </Layout>
   )
 }
