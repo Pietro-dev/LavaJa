@@ -34,7 +34,6 @@ class ServicoServiceTest {
     @InjectMocks
     private ServicoService servicoService;
 
-    // 🔥 TESTE 1: Salvar serviço com sucesso
     @Test
     void deveSalvarServicoComSucesso() {
         // Arrange
@@ -71,7 +70,6 @@ class ServicoServiceTest {
         verify(servicoRepository, times(1)).save(any(Servico.class));
     }
 
-    // 🔥 TESTE 2: Falha ao salvar serviço quando lava rápido não existe
     @Test
     void deveLancarExcecaoQuandoLavaRapidoNaoExiste() {
         // Arrange
@@ -91,7 +89,6 @@ class ServicoServiceTest {
         verify(servicoRepository, never()).save(any(Servico.class));
     }
 
-    // 🔥 TESTE 3: Listar serviços sem filtro (razaoSocial nula)
     @Test
     void deveListarTodosServicosQuandoRazaoSocialForNula() {
         // Arrange
@@ -145,7 +142,6 @@ class ServicoServiceTest {
         verify(servicoRepository, never()).findByLavaRapidoRazaoSocialContainingIgnoreCase(anyString());
     }
 
-    // 🔥 TESTE 4: Listar serviços com razaoSocial vazia
     @Test
     void deveListarTodosServicosQuandoRazaoSocialForVazia() {
         // Arrange
@@ -170,7 +166,6 @@ class ServicoServiceTest {
         verify(servicoRepository, never()).findByLavaRapidoRazaoSocialContainingIgnoreCase(anyString());
     }
 
-    // 🔥 TESTE 5: Listar serviços com razaoSocial em branco
     @Test
     void deveListarTodosServicosQuandoRazaoSocialForEmBranco() {
         // Arrange
@@ -195,7 +190,6 @@ class ServicoServiceTest {
         verify(servicoRepository, never()).findByLavaRapidoRazaoSocialContainingIgnoreCase(anyString());
     }
 
-    // 🔥 TESTE 6: Listar serviços filtrados por razaoSocial
     @Test
     void deveListarServicosFiltradosPorRazaoSocial() {
         // Arrange
@@ -230,7 +224,6 @@ class ServicoServiceTest {
         verify(servicoRepository, never()).findAll();
     }
 
-    // 🔥 TESTE 7: Buscar serviços por ID do lava rápido
     @Test
     void deveBuscarServicosPorLavaRapidoId() {
         // Arrange
@@ -259,7 +252,6 @@ class ServicoServiceTest {
         verify(servicoRepository, times(1)).findByLavaRapidoId(lavaRapidoId);
     }
 
-    // 🔥 TESTE 8: Retornar lista vazia quando não há serviços para o lava rápido
     @Test
     void deveRetornarListaVaziaQuandoNaoHaServicosParaLavaRapido() {
         // Arrange
@@ -274,7 +266,6 @@ class ServicoServiceTest {
         verify(servicoRepository, times(1)).findByLavaRapidoId(lavaRapidoId);
     }
 
-    // 🔥 TESTE 9: Retornar lista vazia quando não há serviços cadastrados
     @Test
     void deveRetornarListaVaziaQuandoNaoHaServicosCadastrados() {
         // Arrange
@@ -288,7 +279,6 @@ class ServicoServiceTest {
         verify(servicoRepository, times(1)).findAll();
     }
 
-    // 🔥 TESTE 10: Teste de conversão para DTO com dados completos
     @Test
     void deveConverterServicoParaDTOComTodosOsDados() {
         // Arrange

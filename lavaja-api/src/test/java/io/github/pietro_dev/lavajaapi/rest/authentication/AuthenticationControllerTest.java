@@ -61,7 +61,6 @@ class AuthenticationControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Setup Usuario
         usuario = new Usuario();
         usuario.setId(1L);
         usuario.setNome("João Silva");
@@ -69,7 +68,6 @@ class AuthenticationControllerTest {
         usuario.setSenha("senhaCriptografada123");
         usuario.setRole(UsuarioRole.CLIENTE);
 
-        // Setup LavaRapido
         lavaRapido = new LavaRapido();
         lavaRapido.setId(1L);
         lavaRapido.setRazaoSocial("Lava Jato Express");
@@ -78,7 +76,6 @@ class AuthenticationControllerTest {
         lavaRapido.setCnpj("12.345.678/0001-90");
         lavaRapido.setTelefone("(11) 99999-9999");
 
-        // Setup requests
         usuarioLoginRequest = new UsuarioFormLoginRequest("joao@email.com", "senha123");
         usuarioCadastroRequest = new UsuarioFormCadastroRequest("Maria Santos", "maria@email.com", "senha123", UsuarioRole.CLIENTE);
 

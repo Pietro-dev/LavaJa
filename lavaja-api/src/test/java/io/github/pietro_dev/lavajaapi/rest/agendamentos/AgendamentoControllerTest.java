@@ -50,13 +50,11 @@ class AgendamentoControllerTest {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
-        // Configurar AgendamentoRequestDTO
         agendamentoRequestDTO = new AgendamentoRequestDTO();
         agendamentoRequestDTO.setServicoId(1L);
         agendamentoRequestDTO.setUsuarioId(1L);
         agendamentoRequestDTO.setInicio(LocalDateTime.of(2024, 1, 15, 10, 0));
 
-        // Configurar AgendamentoResponseDTO
         agendamentoResponseDTO = new AgendamentoResponseDTO();
         agendamentoResponseDTO.setId(1L);
         agendamentoResponseDTO.setInicio(LocalDateTime.of(2024, 1, 15, 10, 0));
@@ -72,11 +70,9 @@ class AgendamentoControllerTest {
         agendamentoResponseDTO.setServicoId(1L);
         agendamentoResponseDTO.setLavaRapidoId(1L);
 
-        // Configurar AgendamentoAtualizarStatusDTO
         agendamentoAtualizarStatusDTO = new AgendamentoAtualizarStatusDTO();
         agendamentoAtualizarStatusDTO.setStatus(Status.FINALIZADO);
 
-        // Configurar entidade Agendamento para os testes que retornam List<Agendamento>
         agendamento = criarAgendamento();
     }
 
