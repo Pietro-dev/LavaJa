@@ -1,4 +1,3 @@
-// app/clientes/lava-rapidos/[id]/servicos/page.tsx
 'use client'
 
 import { useParams } from 'next/navigation'
@@ -12,13 +11,10 @@ export default function ServicosPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // 🔥 CORREÇÃO: Busca o usuarioId da forma correta
     const getUsuarioId = () => {
-      // Primeiro tenta do localStorage da forma que seus logins salvam
       let id = localStorage.getItem('usuarioId')
       
       if (!id) {
-        // Tenta do objeto 'user' como fallback
         const userStr = localStorage.getItem('user')
         if (userStr) {
           try {
@@ -64,12 +60,11 @@ export default function ServicosPage() {
     )
   }
 
-  // 🔥 CORREÇÃO: O componente ServicosList agora lida com usuarioId undefined
   return (
     <div>
       <ServicosList 
         lavaRapidoId={id} 
-        usuarioId={usuarioId || undefined} // Pode ser undefined, o componente lida com isso
+        usuarioId={usuarioId || undefined}
       />
     </div>
   )

@@ -1,4 +1,3 @@
-// components/perfil/PerfilLavaRapido.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -39,7 +38,6 @@ export function PerfilLavaRapido({ lavaRapidoId }: PerfilLavaRapidoProps) {
     const userType = localStorage.getItem('userType')
     const lavaRapidoIdStr = localStorage.getItem('lavaRapidoId')
     
-    // 🔥 SÓ RETORNA SE FOR LAVA RÁPIDO
     if (userType === 'LAVA_RAPIDO' && lavaRapidoIdStr) {
       const lavaRapidoId = parseInt(lavaRapidoIdStr, 10)
       return isNaN(lavaRapidoId) ? undefined : lavaRapidoId
@@ -64,16 +62,16 @@ export function PerfilLavaRapido({ lavaRapidoId }: PerfilLavaRapidoProps) {
           return
         }
 
-        console.log('🔍 Carregando perfil do lava-rápido:', effectiveLavaRapidoId)
+        console.log('Carregando perfil do lava-rápido:', effectiveLavaRapidoId)
 
         const response = await httpClient.get<LavaRapido>(`/api/lava-rapidos/${effectiveLavaRapidoId}`)
         setLavaRapido(response.data)
         setFormData(response.data)
 
-        console.log('✅ Perfil do estabelecimento carregado com sucesso:', response.data)
+        console.log('Perfil do estabelecimento carregado com sucesso:', response.data)
 
       } catch (error: any) {
-        console.error('❌ Erro ao carregar perfil do lava-rápido:', error)
+        console.error('Erro ao carregar perfil do lava-rápido:', error)
         
         if (error.response?.status === 401 || error.response?.status === 403) {
           setError('Sessão expirada. Faça login novamente.')
@@ -142,7 +140,6 @@ export function PerfilLavaRapido({ lavaRapidoId }: PerfilLavaRapidoProps) {
 
       console.log('💾 Salvando alterações do perfil:', formData)
 
-      // 🔥 PREPARA OS DADOS PARA ENVIAR - CONFORME DTO DO LAVA RÁPIDO
       const dadosParaEnviar: any = {
         razaoSocial: formData.razaoSocial,
         email: formData.email,
@@ -152,19 +149,17 @@ export function PerfilLavaRapido({ lavaRapidoId }: PerfilLavaRapidoProps) {
         senhaAtual: senhaAtual
       }
 
-      // 🔥 SE TEM NOVA SENHA, ADICIONA COMO novaSenha
       if (novaSenha) {
         dadosParaEnviar.novaSenha = novaSenha
       }
 
-      console.log('📤 Dados a serem enviados:', dadosParaEnviar)
+      console.log('Dados a serem enviados:', dadosParaEnviar)
 
       // Faz a requisição PUT para atualizar o lava rápido
       const response = await httpClient.put(`/api/lava-rapidos/${lavaRapido.id}`, dadosParaEnviar)
       
-      console.log('✅ Perfil do estabelecimento atualizado com sucesso:', response.data)
-      
-      // 🔥 CORREÇÃO: Recarrega os dados completos do backend
+      console.log('Perfil do estabelecimento atualizado com sucesso:', response.data)
+
       const dadosAtualizados = await httpClient.get<LavaRapido>(`/api/lava-rapidos/${lavaRapido.id}`)
       
       setLavaRapido(dadosAtualizados.data)
@@ -179,7 +174,7 @@ export function PerfilLavaRapido({ lavaRapidoId }: PerfilLavaRapidoProps) {
       alert('Perfil do estabelecimento atualizado com sucesso!')
 
     } catch (error: any) {
-      console.error('❌ Erro ao atualizar perfil do estabelecimento:', error)
+      console.error('Erro ao atualizar perfil do estabelecimento:', error)
       
       if (error.response?.data) {
         const errorMessage = error.response.data.message || error.response.data
@@ -299,7 +294,7 @@ export function PerfilLavaRapido({ lavaRapidoId }: PerfilLavaRapidoProps) {
                   </div>
 
                   <div className="content">
-                    {/* 🔥 CAMPOS ESPECÍFICOS DO LAVA RÁPIDO */}
+                    {/*CAMPOS DO LAVA RÁPIDO */}
                     <div className="field">
                       <label className="label">Nome do Estabelecimento</label>
                       <div className="control">
@@ -393,7 +388,7 @@ export function PerfilLavaRapido({ lavaRapidoId }: PerfilLavaRapidoProps) {
                       </div>
                     </div>
 
-                    {/* SEÇÃO DE SENHA - OBRIGATÓRIA NO MODO EDIÇÃO */}
+                    {/* SEÇÃO DE SENHA*/}
                     {editando && (
                       <div className="box">
                         <p className="subtitle is-6 has-text-grey mb-4">

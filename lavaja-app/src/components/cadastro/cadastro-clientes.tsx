@@ -56,13 +56,11 @@ export const CadastroForm: React.FC = () => {
       try {
         console.log('📝 Tentando cadastro...', values)
 
-        // Remove campos que não pertencem ao payload da API
         const { aceitaTermos, ...userData } = values
 
-        // 🔥 CORREÇÃO: ADICIONA ROLE COMO CLIENTE
         const payloadComRole = {
           ...userData,
-          role: 'CLIENTE' // 🔥 AGORA ENVIA O ROLE
+          role: 'CLIENTE'
         }
 
         console.log('📤 Dados a serem enviados:', payloadComRole)
@@ -80,9 +78,9 @@ export const CadastroForm: React.FC = () => {
         }, 700)
 
       } catch (err: any) {
-        console.error('❌ Erro completo no cadastro:', err)
+        console.error('Erro completo no cadastro:', err)
         
-        // DEBUG DETALHADO
+        // Debug
         console.error('🔍 Detalhes do erro:')
         console.error('   - Message:', err.message)
         

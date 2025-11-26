@@ -88,7 +88,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
             </div>
 
-            {/* Gráfico - LAYOUT CORRIGIDO */}
+            {/* Gráfico*/}
             <div className="columns" style={{ marginTop: '2rem' }}>
                 <div className="column is-full">
                     <div className="card">

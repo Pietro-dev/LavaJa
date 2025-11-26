@@ -60,19 +60,17 @@ export function HistoricoAgendamentos({
   }
 
   useEffect(() => {
-    // DEBUG: Verifique o que está no localStorage
-    console.log('🔍 DEBUG HistoricoAgendamentos - localStorage:', {
-      userType: localStorage.getItem('userType'),
-      usuarioId: localStorage.getItem('usuarioId'),
-      token: localStorage.getItem('token'),
-      temUser: !!localStorage.getItem('user')
-    })
+    // console.log('🔍 DEBUG HistoricoAgendamentos - localStorage:', {
+    //   userType: localStorage.getItem('userType'),
+    //   usuarioId: localStorage.getItem('usuarioId'),
+    //   token: localStorage.getItem('token'),
+    //   temUser: !!localStorage.getItem('user')
+    // })
 
     const loadAgendamentos = async () => {
       try {
         setLoading(true)
         
-        // Busca o usuarioId da forma correta
         let effectiveUsuarioId: number | undefined = usuarioId
         
         if (!effectiveUsuarioId) {
@@ -146,12 +144,11 @@ export function HistoricoAgendamentos({
     try {
       console.log('Tentando cancelar agendamento:', agendamento.id)
       
-      // Prepara o payload conforme o AgendamentoAtualizarStatusDTO
       const payload = {
         servicoId: agendamento.servicoId,
         usuarioId: agendamento.usuarioId,
         status: 'CANCELADO',
-        inicio: agendamento.inicio // Já está no formato "DD/MM/YYYY HH:mm"
+        inicio: agendamento.inicio 
       }
       
       console.log('Payload enviado:', payload)

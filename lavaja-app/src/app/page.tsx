@@ -12,7 +12,6 @@ const Home: React.FC = () => {
   useEffect(() => {
     console.log('🏠 Página inicial - Status:', { isAuthenticated, loading })
     
-    // 🔥 CORREÇÃO: Redireciona apenas quando o loading termina E não está autenticado
     if (!loading && !isAuthenticated) {
       console.log('🔀 Redirecionando para login...')
       router.push('/login')
@@ -21,7 +20,6 @@ const Home: React.FC = () => {
 
   console.log('🏠 Renderizando com:', { isAuthenticated, loading })
 
-  // 🔥 CORREÇÃO: Se não está autenticado E não está carregando, mostra loading até redirecionar
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -35,12 +33,10 @@ const Home: React.FC = () => {
     )
   }
 
-  // 🔥 CORREÇÃO: Só mostra o dashboard se estiver autenticado
   if (isAuthenticated) {
     return <LoginForm />
   }
 
-  // Fallback - nunca deve chegar aqui
   return (
     <div className="min-h-screen flex items-center justify-center">
       <p>Algo deu errado...</p>

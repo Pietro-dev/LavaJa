@@ -41,11 +41,9 @@ export const CadastroServicos: React.FC = ()=>{
     const searchParams = useSearchParams()
     const queryId = searchParams.get('id')
 
-    // 🔥 ESTADOS PARA CONTROLE DO LAVA RÁPIDO
     const [ lavaRapidoId, setLavaRapidoId ] = useState<string>('')
     const [ isLavaRapidoUser, setIsLavaRapidoUser ] = useState<boolean>(false)
 
-    // 🔥 FUNÇÃO PARA OBTER LAVA RÁPIDO ID DO LOCALSTORAGE
     const getLavaRapidoIdFromStorage = (): string => {
         if (typeof window !== 'undefined') {
             const userType = localStorage.getItem('userType')
@@ -54,7 +52,7 @@ export const CadastroServicos: React.FC = ()=>{
             console.log('🔍 CadastroServicos - Debug:', {
                 userType,
                 lavaRapidoId,
-                token: localStorage.getItem('token') ? '✅' : '❌'
+                token: localStorage.getItem('token') ? 'Sim' : 'Não'
             })
             
             if (userType === 'LAVA_RAPIDO' && lavaRapidoId) {
@@ -66,13 +64,11 @@ export const CadastroServicos: React.FC = ()=>{
     }
 
     useEffect(() => {
-        // 🔥 BUSCA AUTOMATICAMENTE O LAVA RÁPIDO ID AO CARREGAR
         const storedLavaRapidoId = getLavaRapidoIdFromStorage()
         if (storedLavaRapidoId) {
             setLavaRapidoId(storedLavaRapidoId)
         }
 
-        // 🔥 CARREGA SERVIÇO EXISTENTE (se for edição)
         if(queryId){
             service.carregarServico(queryId).then(servicoEncontrado => {
                 setId(servicoEncontrado.id || '')
@@ -82,7 +78,6 @@ export const CadastroServicos: React.FC = ()=>{
                 setDuracao(servicoEncontrado.duracao != null ? servicoEncontrado.duracao.toString() : '')
                 setValor(formatReal(servicoEncontrado.valor != null ? (servicoEncontrado.valor*100).toString() : ''))
 
-                // 🔥 SÓ PREENCHE SE NÃO FOR LAVA RÁPIDO OU SE NÃO HOUVER ID NO STORAGE
                 if (servicoEncontrado.lavaRapidoId && !storedLavaRapidoId) {
                     setLavaRapidoId(String(servicoEncontrado.lavaRapidoId))
                 }
@@ -99,7 +94,7 @@ export const CadastroServicos: React.FC = ()=>{
             descricao, 
             valor: converterEmBigDecimal(valor), 
             duracao: converterEmBigDecimal(duracao),
-            lavaRapidoId // 🔥 SEMPRE ENVIA O ID, MESMO QUANDO BLOQUEADO
+            lavaRapidoId
         }
         
         console.log('📤 Servico a ser salvo:', novoServico)
@@ -154,7 +149,7 @@ export const CadastroServicos: React.FC = ()=>{
                     type='text' 
                     placeholder='Código Lava-Rápido'
                     error={errors.lavaRapidoId}
-                    disabled={isLavaRapidoUser} // 🔥 BLOQUEADO PARA LAVA RÁPIDOS
+                    disabled={isLavaRapidoUser}
                 />
                 <Input 
                     onChange={e => setServico(e.target.value)} 

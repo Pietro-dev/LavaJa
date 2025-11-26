@@ -17,7 +17,6 @@ export const ListagemServicos: React.FC = () => {
     const [messages, setMessages] = useState<Array<Alert>>([])
     const router = useRouter()
     
-    // 🔥 ESTADOS PARA CONTROLE DE USUÁRIO
     const [isLavaRapido, setIsLavaRapido] = useState<boolean>(false)
     const [lavaRapidoId, setLavaRapidoId] = useState<string | null>(null)
     
@@ -40,7 +39,6 @@ export const ListagemServicos: React.FC = () => {
         return { isLavaRapido: false, lavaRapidoId: null }
     }
 
-    // 🔥 SWR CONDICIONAL - endpoint diferente para lava rápido
     const userInfo = getUserInfo()
     const endpoint = userInfo.isLavaRapido && userInfo.lavaRapidoId 
         ? `/api/servicos/${userInfo.lavaRapidoId}/servicos` 
@@ -66,7 +64,7 @@ export const ListagemServicos: React.FC = () => {
     const editar = (servico: Servico) => {
         let url = `/cadastros/servicos?id=${servico.id}`
         
-        // 🔥 SE FOR LAVA RÁPIDO, ADICIONA O ID NA URL
+
         if (isLavaRapido && lavaRapidoId) {
             url += `&lavaRapidoId=${lavaRapidoId}`
         }
@@ -94,7 +92,6 @@ export const ListagemServicos: React.FC = () => {
         })
     }
 
-    // 🔥 TÍTULO CONDICIONAL
     const getTitulo = () => {
         return isLavaRapido ? 'Meus Serviços' : 'Serviços Cadastrados'
     }
@@ -107,7 +104,7 @@ export const ListagemServicos: React.FC = () => {
         return (
             <Layout titulo={getTitulo()} mensagens={messages}>
                 <div className="notification is-danger">
-                    <p>❌ Erro ao carregar serviços</p>
+                    <p>Erro ao carregar serviços</p>
                     <button 
                         className="button is-light mt-3"
                         onClick={() => window.location.reload()}
@@ -125,7 +122,6 @@ export const ListagemServicos: React.FC = () => {
 
     return (
         <Layout titulo={getTitulo()} subtitulo={getSubtitulo()} mensagens={messages}>
-            {/* 🔥 BOTÃO SEMPRE VISÍVEL, MAS COM COMPORTAMENTO DIFERENTE */}
             <Link href={isLavaRapido ? `/cadastros/servicos?lavaRapidoId=${lavaRapidoId}` : "/cadastros/servicos"}>
                 <button className="button is-primary is-dark">
                     {isLavaRapido ? 'Novo Serviço' : 'Novo'}

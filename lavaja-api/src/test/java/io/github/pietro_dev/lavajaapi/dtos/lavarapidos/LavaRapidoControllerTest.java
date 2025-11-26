@@ -139,7 +139,7 @@ class LavaRapidoControllerTest {
         when(lavaRapidoRepository.save(any(LavaRapido.class))).thenReturn(lavaRapido);
 
         // Act
-        ResponseEntity<Void> response = lavaRapidoController.atualizar(1L, updateRequest);
+        ResponseEntity<Object> response = lavaRapidoController.atualizar(1L, updateRequest);
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -168,7 +168,7 @@ class LavaRapidoControllerTest {
         when(lavaRapidoRepository.save(any(LavaRapido.class))).thenReturn(lavaRapido);
 
         // Act
-        ResponseEntity<Void> response = lavaRapidoController.atualizar(1L, updateRequest);
+        ResponseEntity<Object> response = lavaRapidoController.atualizar(1L, updateRequest);
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -185,7 +185,7 @@ class LavaRapidoControllerTest {
         when(lavaRapidoRepository.findById(999L)).thenReturn(Optional.empty());
 
         // Act
-        ResponseEntity<Void> response = lavaRapidoController.atualizar(999L, lavaRapidoFormRequest);
+        ResponseEntity<Object> response = lavaRapidoController.atualizar(999L, lavaRapidoFormRequest);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());

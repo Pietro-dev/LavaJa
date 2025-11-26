@@ -51,14 +51,12 @@ export const FormCadastroUsuarios: React.FC<UsuarioFormProps> = ({
         console.log('📤 Dados do formulário:', values)
         
         if (values.id) {
-            // 🔥 EDIÇÃO: Apenas nome e email (sem senha)
             const dadosEdicao = {
                 nome: values.nome,
                 email: values.email
             }
             onSubmit(dadosEdicao)
         } else {
-            // 🔥 CADASTRO: Com senha
             const dadosCadastro = {
                 nome: values.nome,
                 email: values.email,
@@ -144,7 +142,6 @@ export const FormCadastroUsuarios: React.FC<UsuarioFormProps> = ({
                 </div>
             )}
             
-            {/* 🔥 APENAS NO CADASTRO */}
             {!formik.values.id && (
                 <div className="field">
                     <Input 

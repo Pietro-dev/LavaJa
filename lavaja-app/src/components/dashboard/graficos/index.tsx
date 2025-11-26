@@ -48,7 +48,7 @@ export const GraficoBarras: React.FC<GraficoBarrasProps> = ({
 
       const options = {
         responsive: true,
-        maintainAspectRatio: false, // ✅ IMPORTANTE: Permite controlar a proporção
+        maintainAspectRatio: false,
         scales: {
           y: {
             beginAtZero: true,

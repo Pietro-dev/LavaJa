@@ -1,4 +1,3 @@
-// components/login/loginPage.tsx
 "use client"
 
 import { useFormik } from 'formik'
@@ -45,12 +44,12 @@ export const LoginForm: React.FC = () => {
             setLoading(true)
 
             try {
-                console.log('🔐 Tentando login...', values)
+                console.log('Tentando login...', values)
 
                 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080'
                 const url = `${API_BASE}/auth/login`
                 
-                console.log('🌐 URL do login:', url)
+                console.log('URL do login:', url)
 
                 // 1. Faz login para obter token e usuarioId
                 const loginResponse = await fetch(url, {
@@ -66,7 +65,7 @@ export const LoginForm: React.FC = () => {
 
                 if (!loginResponse.ok) {
                     const errorText = await loginResponse.text()
-                    console.error('❌ Erro do backend:', errorText)
+                    console.error('Erro do backend:', errorText)
                     
                     // Trata erro 403 especificamente
                     if (loginResponse.status === 403) {
@@ -83,9 +82,8 @@ export const LoginForm: React.FC = () => {
                 if (loginData.token && loginData.usuarioId) {
                     localStorage.setItem('token', loginData.token)
                     localStorage.setItem('usuarioId', loginData.usuarioId)
-                    
-                    // 🔥 NÃO define userType fixo - será determinado pelos IDs
-                    console.log('🔑 Dados salvos no localStorage:')
+                
+                    console.log('Dados salvos no localStorage:')
                     console.log('   - Token:', loginData.token ? '✅' : '❌')
                     console.log('   - UsuarioId:', loginData.usuarioId)
 
@@ -97,7 +95,7 @@ export const LoginForm: React.FC = () => {
                     let userType = 'CLIENTE'
                     let redirectPath = '/clientes/home-clientes'
 
-                    console.log('🔍 Verificando tipo de usuário:')
+                    console.log('Verificando tipo de usuário:')
                     console.log('   - usuarioId:', usuarioId)
                     console.log('   - tipo:', typeof usuarioId)
                     console.log('   - valor exato:', usuarioId)
@@ -110,10 +108,8 @@ export const LoginForm: React.FC = () => {
                         console.log('👤 Usuário identificado como CLIENTE')
                     }
                     
-                    // 🔥 SALVA O userType CORRETO
                     localStorage.setItem('userType', userType)
                     
-                    // 🔥 VERIFICAÇÃO ANTES DO REDIRECT
                     const savedUserType = localStorage.getItem('userType')
                     console.log('🏷️ UserType salvo no localStorage:', savedUserType)
 
@@ -128,7 +124,7 @@ export const LoginForm: React.FC = () => {
                 }
 
             } catch (err: any) {
-                console.error('❌ Erro completo no login:', err)
+                console.error('Erro completo no login:', err)
                 
                 let message = 'Erro ao realizar login'
                 
@@ -157,7 +153,6 @@ export const LoginForm: React.FC = () => {
         }
     })
 
-    // 🔥 CORREÇÃO: Tipo correto para o form event
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         console.log('📝 Formulário submetido, prevenindo recarregamento...')
@@ -184,7 +179,6 @@ export const LoginForm: React.FC = () => {
                                     </div>
                                 )}
 
-                                {/* 🔥 CORREÇÃO: Usa handleFormSubmit com tipo correto */}
                                 <form onSubmit={handleFormSubmit}>
                                     <div className="field">
                                         <Input 

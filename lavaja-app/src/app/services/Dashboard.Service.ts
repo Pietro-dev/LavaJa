@@ -1,4 +1,3 @@
-// app/services/dashboardService.ts
 import { httpClient } from "app/http"
 import { DashboardData } from "app/models/dashboard"
 import { AxiosResponse } from "axios"

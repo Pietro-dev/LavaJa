@@ -9,12 +9,10 @@ interface LavaRapidoFormProps {
     onSubmit: (lavaRapido: LavaRapido | LavaRapidoCadastro) => void
 }
 
-// Interface para cadastro (com senha, sem id e dataCadastro)
 interface LavaRapidoCadastro extends Omit<LavaRapido, 'id' | 'dataCadastro'> {
     senha: string
 }
 
-// Interface para edição (sem senha, com id e dataCadastro)
 interface LavaRapidoEdicao extends Omit<LavaRapido, 'senha'> {
     senha?: never
 }
@@ -56,14 +54,14 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
 
     // Função para tratar o envio baseado no contexto (cadastro/edição)
     const handleSubmit = (values: LavaRapidoCadastro & { id?: string; dataCadastro?: string }) => {
-        console.log('📤 Dados do formulário:', values)
+        console.log('Dados do formulário:', values)
         
         if (values.id) {
-            // 🔄 EDIÇÃO: Remove senha, mantém id e dataCadastro
+            //EDIÇÃO: Remove senha, mantém id e dataCadastro
             const { senha, ...dadosEdicao } = values
             onSubmit(dadosEdicao as LavaRapidoEdicao)
         } else {
-            // 🆕 CADASTRO: Remove id e dataCadastro, mantém senha
+            //CADASTRO: Remove id e dataCadastro, mantém senha
             const { id, dataCadastro, ...dadosCadastro } = values
             onSubmit(dadosCadastro as LavaRapidoCadastro)
         }
@@ -172,7 +170,6 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
                     error={formik.errors.email}
                 />
                 
-                {/* 🔥 CAMPO SENHA CONDICIONAL */}
                 {!formik.values.id && (
                     <Input 
                         className='input is-full'

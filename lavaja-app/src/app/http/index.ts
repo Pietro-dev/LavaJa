@@ -11,14 +11,12 @@ export const httpClient = axios.create({
 
 const AUTO_LOGOUT_ON_401 = true;
 
-// Helper para autenticação — declarado ANTES dos interceptors
 export const authHelper = {
   isAuthenticated: (): boolean => {
     if (typeof window === 'undefined') return false;
     return !!localStorage.getItem('token');
   },
 
-  // 🔥 NOVA LÓGICA: Determina o tipo de usuário baseado nos IDs
   getUserType: (): 'ADMIN' | 'CLIENTE' | 'LAVA_RAPIDO' | null => {
     if (typeof window === 'undefined') return null;
     
@@ -76,7 +74,7 @@ export const authHelper = {
     console.log('🔍 Auth Debug:', {
       hasToken: !!localStorage.getItem('token'),
       token: localStorage.getItem('token') ? `${localStorage.getItem('token')!.slice(0,10)}...` : null,
-      userType: authHelper.getUserType(), // 🔥 AGORA USA A NOVA LÓGICA
+      userType: authHelper.getUserType(),
       usuarioId: localStorage.getItem('usuarioId'),
       lavaRapidoId: localStorage.getItem('lavaRapidoId'),
       axiosDefaultAuth: httpClient.defaults.headers.common['Authorization']
@@ -84,7 +82,6 @@ export const authHelper = {
   }
 };
 
-// Interceptor request: garante header Authorization antes de cada requisição
 httpClient.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
@@ -105,45 +102,6 @@ httpClient.interceptors.request.use(
   }
 );
 
-// Interceptor response: agora só desloga automaticamente em 401 (configurável).
-// httpClient.interceptors.response.use(
-//   (response) => {
-//     // logs úteis para debug
-//     console.log('✅ Resposta recebida:', {
-//       url: response.config.url,
-//       status: response.status,
-//     });
-//     return response;
-//   },
-//   (error) => {
-//     const status = error?.response?.status;
-//     const url = error?.config?.url;
-//     console.error('❌ Erro na resposta:', {
-//       url,
-//       method: error?.config?.method?.toUpperCase(),
-//       status,
-//       message: error?.message,
-//       responseBody: error?.response?.data
-//     });
-
-//     if (typeof window !== 'undefined') {
-//       // Só limpa e redireciona automaticamente em 401 (Token inválido/expirado)
-//       if (status === 401 && AUTO_LOGOUT_ON_401) {
-//         console.log('🔐 401 recebido - limpando auth e sugerindo login');
-//         authHelper.clearAuth();
-//         // Não forçamos window.location.href — deixamos a UI decidir. Se preferir forçar:
-//         // window.location.href = '/login';
-//       } else if (status === 403) {
-//         // 403: autorizado, mas sem permissão — DEBUG: não limpar token automaticamente
-//         console.warn('🔒 403 Forbidden — token presente mas sem permissão para o recurso', { url, status, responseBody: error?.response?.data });
-//       }
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
-
-// Fetcher para SWR (opcional)
 export const swrFetcher = (url: string) => {
   return httpClient.get(url).then(res => res.data);
 };

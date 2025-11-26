@@ -17,16 +17,16 @@ export const Menu:React.FC = ()=>{
         const lavaRapidoId = localStorage.getItem('lavaRapidoId')
     
         if (usuarioId === '1') {
-            console.log('👑 Usuário detectado: ADMIN')
+            console.log('Usuário detectado: ADMIN')
             setUserType('ADMIN')
         } else if (lavaRapidoId) {
-            console.log('🏪 Usuário detectado: LAVA_RAPIDO')
+            console.log('Usuário detectado: LAVA_RAPIDO')
             setUserType('LAVA_RAPIDO')
         } else if (usuarioId) {
-            console.log('👤 Usuário detectado: CLIENTE')
+            console.log('Usuário detectado: CLIENTE')
             setUserType('CLIENTE')
         } else {
-            console.log('🚫 Nenhum usuário logado')
+            console.log('Nenhum usuário logado')
             setUserType(null)
         }
         
@@ -69,7 +69,7 @@ export const Menu:React.FC = ()=>{
                 <>
                     <p className="menu-label is-hidden-touch">Meu Lava-Rápido</p>
                     <ul className="menu-list">
-                        <MenuItem href='/lava-rapido/dashboard' label='Dashboard'/>
+                        <MenuItem href='/dashboard' label='Dashboard'/>
                         <MenuItem href='/lava-rapido/agendamentos' label='Agendamentos'/>
                         <MenuItem href='/lava-rapido/servicos' label='Meus Serviços'/>
                         <MenuItem href='/lava-rapido/perfil' label='Perfil do Estabelecimento'/>
@@ -91,7 +91,6 @@ export const Menu:React.FC = ()=>{
                 </>
             )}
 
-            {/* SE NÃO ESTIVER LOGADO */}
             {!userType && (
                 <>
                     <p className="menu-label is-hidden-touch">Visitante</p>

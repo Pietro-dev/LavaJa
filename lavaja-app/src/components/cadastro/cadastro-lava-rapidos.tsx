@@ -40,13 +40,11 @@ const msgObrigatorio = "Campo obrigatório"
 const validationSchema = Yup.object().shape({
     razaoSocial: Yup.string().trim().required(msgObrigatorio),
     cnpj: Yup.string().trim().required(msgObrigatorio).length(18, 'O CNPJ está incompleto'),
-    // endereco: Yup.string().trim().required(msgObrigatorio), // Mantém a validação do endereço completo
     telefone: Yup.string().trim().required(msgObrigatorio),
     email: Yup.string().trim().required(msgObrigatorio).email("E-mail inválido!"),
     senha: Yup.string().trim().required(msgObrigatorio).min(6, 'A senha deve ter pelo menos 6 caracteres'),
     aceitaTermos: Yup.boolean()
         .oneOf([true], 'Você deve aceitar os Termos de Uso'),
-    // Novas validações para os campos de endereço
     cep: Yup.string().trim().required(msgObrigatorio).length(9, 'CEP inválido'),
     logradouro: Yup.string().trim().required(msgObrigatorio),
     numero: Yup.string().trim().required(msgObrigatorio),
@@ -150,7 +148,7 @@ export const CadastroLavaRapidoForm: React.FC = () => {
                     return
                 }
 
-                console.log('📍 Endereço completo concatenado:', enderecoCompleto)
+                console.log('Endereço completo concatenado:', enderecoCompleto)
 
                 // Cria uma cópia dos valores com o endereço concatenado para validação
                 const valoresComEnderecoConcatenado = {
@@ -160,7 +158,7 @@ export const CadastroLavaRapidoForm: React.FC = () => {
 
                 console.log('🔍 Valores do formulário COM endereço concatenado:', valoresComEnderecoConcatenado)
 
-                // Verifica se há erros de validação COM o endereço concatenado
+                // Verifica se há erros de validação com o endereço concatenado
                 const errors = await validationSchema.validate(valoresComEnderecoConcatenado, { abortEarly: false })
                     .then(() => ({}))
                     .catch((err) => {
@@ -172,7 +170,7 @@ export const CadastroLavaRapidoForm: React.FC = () => {
                     })
 
                 if (Object.keys(errors).length > 0) {
-                    console.log('❌ Erros de validação:', errors)
+                    console.log('Erros de validação:', errors)
                     // Seta os erros no formik para mostrar ao usuário
                     formik.setErrors(errors)
                     setError('Por favor, corrija os erros do formulário')
@@ -180,7 +178,7 @@ export const CadastroLavaRapidoForm: React.FC = () => {
                     return
                 }
 
-                console.log('📝 Tentando cadastrar lava-rápido...')
+                console.log('Tentando cadastrar lava-rápido...')
 
                 // Prepara os dados para envio - mantém apenas os campos que vão para a API
                 const { 
@@ -201,7 +199,7 @@ export const CadastroLavaRapidoForm: React.FC = () => {
                     // endereco já está incluso aqui com o valor concatenado
                 }
 
-                console.log('📤 Dados enviados para API:', dadosParaEnviar)
+                console.log('Dados enviados para API:', dadosParaEnviar)
 
                 // Faz a requisição para a API
                 const response = await httpClient.post('auth/cadastro/lava-rapidos', dadosParaEnviar)
@@ -216,10 +214,10 @@ export const CadastroLavaRapidoForm: React.FC = () => {
                 }, 500)
 
             } catch (err: any) {
-                console.error('❌ Erro no cadastro do lava-rápido:', err)
+                console.error('Erro no cadastro do lava-rápido:', err)
                 
                 // Log mais detalhado do erro
-                console.error('❌ Detalhes do erro:', {
+                console.error('Detalhes do erro:', {
                     status: err.response?.status,
                     data: err.response?.data,
                     message: err.message
@@ -244,9 +242,9 @@ export const CadastroLavaRapidoForm: React.FC = () => {
 
     const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        console.log('🎯 Formulário submetido!')
-        console.log('📋 Valores atuais:', formik.values)
-        console.log('❌ Erros atuais:', formik.errors)
+        console.log('Formulário submetido!')
+        console.log('Valores atuais:', formik.values)
+        console.log('Erros atuais:', formik.errors)
         formik.handleSubmit()
     }
 

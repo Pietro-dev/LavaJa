@@ -1,4 +1,3 @@
-// components/login/LoginLavaRapidoForm.tsx
 "use client"
 
 import { useFormik } from 'formik'
@@ -31,21 +30,20 @@ export const LoginLavaRapidoForm: React.FC = () => {
     }, [])
 
     const handleSubmit = async (values: LoginLavaRapidoFormValues) => {
-        console.log('🎯 handleSubmit CHAMADO - Valores:', values)
+        console.log('handleSubmit CHAMADO - Valores:', values)
         setError('')
         setLoading(true)
 
         try {
-            console.log('🔐 Tentando login como lava-rápido...', values)
+            console.log('Tentando login como lava-rápido...', values)
             
             const response = await httpClient.post('auth/login/lava-rapidos', values)
             
-            console.log('✅ Resposta recebida:', response.data)
+            console.log('Resposta recebida:', response.data)
 
             if (response.data.token) {
             localStorage.setItem('token', response.data.token)
             
-            // 🔥 SALVAR LAVA RÁPIDO ID (verifique qual campo sua API usa)
             const lavaRapidoId = 
                 response.data.lavaRapidoId ||
                 response.data.id
@@ -62,7 +60,7 @@ export const LoginLavaRapidoForm: React.FC = () => {
             router.push('/dashboard')
 
         } catch (err: any) {
-            console.error('❌ Erro no login:', err)
+            console.error('Erro no login:', err)
             
             let message = 'Erro ao realizar login'
             
@@ -91,30 +89,21 @@ export const LoginLavaRapidoForm: React.FC = () => {
 
     // Handler personalizado para o form
     const handleFormSubmit = (e: React.FormEvent) => {
-        e.preventDefault() // 🔥 IMPEDE O REFRESH DA PÁGINA
-        console.log('🛑 Refresh prevenido!')
+        e.preventDefault()
         
         // Valida manualmente antes de submeter
         formik.validateForm().then(errors => {
             if (Object.keys(errors).length === 0) {
-                console.log('✅ Formulário válido, submetendo...')
+                console.log('Formulário válido, submetendo...')
                 handleSubmit(formik.values)
             } else {
-                console.log('❌ Erros de validação:', errors)
+                console.log('Erros de validação:', errors)
                 formik.setTouched({
                     email: true,
                     senha: true
                 })
             }
         })
-    }
-
-    // Teste do botão
-    const handleTestClick = () => {
-        console.log('🖱️ Botão de teste clicado!')
-        console.log('📋 Valores:', formik.values)
-        console.log('❌ Erros:', formik.errors)
-        console.log('✅ Válido?:', formik.isValid)
     }
 
     if (!isClient) {
@@ -154,7 +143,7 @@ export const LoginLavaRapidoForm: React.FC = () => {
                                     </div>
                                 )}
 
-                                {/* 🔥 USANDO handleFormSubmit personalizado */}
+                                {/*handleFormSubmit personalizado */}
                                 <form onSubmit={handleFormSubmit}>
                                     <div className="field">
                                         <Input 

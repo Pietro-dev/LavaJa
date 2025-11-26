@@ -120,9 +120,6 @@ export const AgendamentoForm: React.FC<AgendamentoFormProps> = ({ agendamento, o
     return () => { cancelled = true }
   }, [])
 
-  /**
-   * Carrega serviços filtrados pelo lavaRapido selecionado usando razaoSocial
-   */
   useEffect(() => {
     const lavaId = formik.values.lavaRapidoId
     if (!lavaId) {

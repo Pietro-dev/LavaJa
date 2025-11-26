@@ -1,4 +1,3 @@
-// components/dashboard/dashboard-client.tsx
 "use client"
 
 import { useState, useEffect } from 'react'
@@ -18,11 +17,10 @@ export const DashboardClient: React.FC = () => {
 
   const service = useDashboardService()
 
-  // 🔥 BUSCA APENAS O ID DO LAVA RÁPIDO LOGADO
   const getLavaRapidoId = (): string => {
     if (typeof window !== 'undefined') {
       const id = localStorage.getItem('lavaRapidoId')
-      console.log('🔍 Lava Rápido ID encontrado:', id)
+      console.log('Lava Rápido ID encontrado:', id)
       return id || ''
     }
     return ''
@@ -30,13 +28,13 @@ export const DashboardClient: React.FC = () => {
 
   const fetchData = async (id: string) => {
     if (!id) {
-      console.log('❌ Nenhum ID de lava rápido encontrado')
+      console.log('Nenhum ID de lava rápido encontrado')
       return
     }
     
     setLoading(true)
     try {
-      console.log('📊 Buscando dados para Lava Rápido ID:', id)
+      console.log('Buscando dados para Lava Rápido ID:', id)
       const data: DashboardData = await service.get(Number(id))
       
       setDashboardData({
@@ -46,13 +44,12 @@ export const DashboardClient: React.FC = () => {
         agendamentosPorDia: data.agendamentosPorDia || []
       })
     } catch (error) {
-      console.error('❌ Erro ao buscar dados:', error)
+      console.error('Erro ao buscar dados:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  // 🔥 BUSCA AUTOMÁTICA AO CARREGAR
   useEffect(() => {
     const id = getLavaRapidoId()
     if (id) {

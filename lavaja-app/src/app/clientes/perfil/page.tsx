@@ -1,4 +1,3 @@
-// app/clientes/perfil/page.tsx
 'use client'
 
 import { PerfilUsuario } from 'components/perfil/perfil-usuario'

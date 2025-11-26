@@ -24,7 +24,6 @@ export const CadastroUsuarios: React.FC = () => {
 
     const handleSubmit = (dados: any) => {
         if(usuario.id){
-        // ✅ Agora envia apenas os dados corretos
         const dadosUpdate = {
             id: usuario.id,
             nome: dados.nome,
@@ -32,7 +31,7 @@ export const CadastroUsuarios: React.FC = () => {
         }
         
         service.atualizarAdm(dadosUpdate).then(response => {
-            console.log('✅ Dados enviados para update:', dadosUpdate)
+            console.log('Dados enviados para update:', dadosUpdate)
             setMessages([
                 {texto: "Usuário atualizado com sucesso!", tipo: "success", titulo: "Sucesso!"}
             ])

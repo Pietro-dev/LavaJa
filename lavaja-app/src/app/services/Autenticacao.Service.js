@@ -1,4 +1,3 @@
-// app/services/Autenticacao.Service.js
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8080";
 
 class AuthService {
@@ -9,7 +8,6 @@ class AuthService {
     this.USER_TYPE_KEY = "userType";
   }
 
-  // --- Headers + fetch wrapper ---
   getAuthHeaders() {
     const token = this.getToken();
     const headers = { "Content-Type": "application/json" };
@@ -25,7 +23,6 @@ class AuthService {
     return resp;
   }
 
-  // --- Registro ---
   async register(userData) {
     const response = await fetch(`${this.baseUrl}/auth/cadastro`, {
       method: "POST",
@@ -41,7 +38,6 @@ class AuthService {
     return { success: true };
   }
 
-  // --- Login Cliente ---
   async login(email, senha) {
     const payload = { email, senha, password: senha };
     const response = await fetch(`${this.baseUrl}/auth/login`, {
@@ -64,7 +60,6 @@ class AuthService {
 
     this.setToken(token);
 
-    // CORREÇÃO: Usar usuarioId em vez de user
     if (data && data.usuarioId) {
       const user = {
         id: data.usuarioId,
@@ -79,7 +74,6 @@ class AuthService {
     return data;
   }
 
-  // --- Login Lava-Rápido ---
   async loginLavaRapido(email, senha) {
     const payload = { email, senha, password: senha };
     const response = await fetch(`${this.baseUrl}/auth/login/lava-rapidos`, {
@@ -104,11 +98,10 @@ class AuthService {
 
     this.setToken(token);
 
-    // ESTRUTURA ESPERADA: { token: "xxx", lavaRapidoId: 123 }
     const userData = {
-      id: data.lavaRapidoId, // ID do lava-rápido
+      id: data.lavaRapidoId,
       email: email,
-      nome: `Lava-Rápido ${data.lavaRapidoId}`, // Nome temporário
+      nome: `Lava-Rápido ${data.lavaRapidoId}`, 
       tipo: 'LAVA_RAPIDO',
       lavaRapidoId: data.lavaRapidoId
     };
@@ -119,7 +112,6 @@ class AuthService {
     return data;
   }
 
-  // --- Token / user storage ---
   setToken(token) {
     try { 
       localStorage.setItem(this.TOKEN_KEY, token);
@@ -141,7 +133,6 @@ class AuthService {
     try { 
       localStorage.setItem(this.USER_KEY, JSON.stringify(user));
       
-      // Salva também o tipo de usuário separadamente para fácil acesso
       if (user.tipo) {
         localStorage.setItem(this.USER_TYPE_KEY, user.tipo);
       }
@@ -161,7 +152,6 @@ class AuthService {
     }
   }
 
-  // --- Métodos auxiliares para verificar tipo de usuário ---
   getUserType() {
     try {
       return localStorage.getItem(this.USER_TYPE_KEY);
@@ -184,7 +174,6 @@ class AuthService {
     return user?.lavaRapidoId || user?.id;
   }
 
-  // --- Retorna usuário armazenado ou decodifica token ---
   async getCurrentUser() {
     const user = this.getUser();
     if (user) return user;
@@ -203,20 +192,17 @@ class AuthService {
     return userFromToken;
   }
 
-  // --- utilitário para escolher campos existentes ---
   pickIfExists(obj, keys) {
     const out = {};
     keys.forEach(k => { if (obj[k] !== undefined) out[k] = obj[k] });
     return out;
   }
 
-  // --- JWT decode simples (sem verificação de assinatura) ---
   decodeJwt(token) {
     try {
       const parts = token.split('.');
       if (parts.length !== 3) return null;
       const payload = parts[1];
-      // base64url -> base64
       const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
       const padded = base64 + '==='.slice((base64.length + 3) % 4);
       const json = decodeURIComponent(atob(padded).split('').map(c => {
@@ -228,7 +214,6 @@ class AuthService {
     }
   }
 
-  // --- Logout ---
   logout() {
     try { 
       localStorage.removeItem(this.TOKEN_KEY);
@@ -244,7 +229,6 @@ class AuthService {
     return !!this.getToken();
   }
 
-  // --- Método auxiliar para redirecionamento baseado no tipo de usuário ---
   redirectBasedOnUserType(router) {
     if (this.isLavaRapido()) {
       router.push('/lava-rapido/dashboard');

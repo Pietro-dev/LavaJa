@@ -29,7 +29,6 @@ export const TabelaLavaRapido: React.FC<TabelaLavaRapidosProps> = ({
                         <th>Endereço</th>
                         <th>Telefone</th>
                         <th>E-mail</th>
-                        {/* <th>Senha</th> */}
                         <th>Data cadastro</th>
                         <th>Ações</th>
                     </tr>
@@ -75,7 +74,6 @@ const LavaRapidoRow: React.FC<LavaRapidoRowProps> = ({
             <td>{lavaRapido.endereco}</td>
             <td>{lavaRapido.telefone}</td>
             <td>{lavaRapido.email}</td>
-            {/* <td>{lavaRapido.senha}</td> */}
             <td>{lavaRapido.dataCadastro}</td>
             <td>
                 <div className='buttons' style={{flexWrap: 'nowrap'}}>

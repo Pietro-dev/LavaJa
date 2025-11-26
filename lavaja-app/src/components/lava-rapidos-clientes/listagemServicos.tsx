@@ -49,7 +49,7 @@ export default function ServicosList({ lavaRapidoId, usuarioId, showTitle = true
       }
       return null
     } catch (e) {
-      console.error('❌ Erro ao obter usuário do storage:', e)
+      console.error('Erro ao obter usuário do storage:', e)
       return null
     }
   }
@@ -64,9 +64,9 @@ export default function ServicosList({ lavaRapidoId, usuarioId, showTitle = true
       setError(null)
 
       const token = localStorage.getItem('token')
-      console.log('🔍 Iniciando carregamento de serviços...')
-      console.log('🪪 Token disponível?', !!token)
-      console.log('🏢 Lava Rápido ID:', lavaRapidoId)
+      console.log('Iniciando carregamento de serviços...')
+      console.log('Token disponível?', !!token)
+      console.log('Lava Rápido ID:', lavaRapidoId)
 
       if (!token) {
         setError('Usuário não autenticado.')
@@ -74,14 +74,14 @@ export default function ServicosList({ lavaRapidoId, usuarioId, showTitle = true
       }
 
       const servicosData = await servicoService.getByLavaRapido(lavaRapidoId)
-      console.log('📦 Serviços carregados:', servicosData)
+      console.log('Serviços carregados:', servicosData)
       setServicos(servicosData)
 
       const lavaRapidoRes = await httpClient.get<LavaRapido>(`/api/lava-rapidos/${lavaRapidoId}`)
-      console.log('🏭 Lava-rápido carregado:', lavaRapidoRes.data)
+      console.log('Lava-rápido carregado:', lavaRapidoRes.data)
       setLavaRapido(lavaRapidoRes.data)
     } catch (err: any) {
-      console.error('❌ Erro ao carregar dados:', err)
+      console.error('Erro ao carregar dados:', err)
       setError('Não foi possível carregar os serviços.')
     } finally {
       setLoading(false)
@@ -90,7 +90,7 @@ export default function ServicosList({ lavaRapidoId, usuarioId, showTitle = true
 
   const handleAgendamento = (servico: Servico) => {
     const userType = localStorage.getItem('userType')
-    console.log('🧩 Tipo de usuário:', userType)
+    console.log('Tipo de usuário:', userType)
 
     if (userType !== 'CLIENTE') {
       alert('Apenas clientes podem fazer agendamentos. Faça login como cliente.')
@@ -99,7 +99,7 @@ export default function ServicosList({ lavaRapidoId, usuarioId, showTitle = true
     }
 
     const effectiveUsuarioId = usuarioId || getUsuarioIdFromStorage()
-    console.log('👤 Usuario ID detectado:', effectiveUsuarioId)
+    console.log('Usuario ID detectado:', effectiveUsuarioId)
 
     if (!effectiveUsuarioId) {
       alert('Usuário não identificado. Faça login novamente.')
@@ -111,19 +111,15 @@ export default function ServicosList({ lavaRapidoId, usuarioId, showTitle = true
     setShowAgendamento(true)
   }
 
-  // ✅ CORREÇÃO: Apenas lida com o sucesso do agendamento
   const handleAgendamentoSuccess = () => {
-    console.log('✅ Agendamento criado com sucesso!')
+    console.log('Agendamento criado com sucesso!')
     alert('Agendamento realizado com sucesso!')
     setShowAgendamento(false)
     setServicoSelecionado(null)
-    // Opcional: recarregar dados se necessário
-    // fetchDados()
   }
 
-  // ✅ CORREÇÃO: Lida com erros do agendamento
   const handleAgendamentoError = (errorMessage: string) => {
-    console.error('❌ Erro no agendamento:', errorMessage)
+    console.error('Erro no agendamento:', errorMessage)
     alert(`Erro ao realizar agendamento: ${errorMessage}`)
   }
 
@@ -207,8 +203,8 @@ export default function ServicosList({ lavaRapidoId, usuarioId, showTitle = true
                 servicoId={Number(servicoSelecionado.id)}
                 usuarioId={Number(usuarioId || getUsuarioIdFromStorage())}
                 lavaRapidoId={Number(lavaRapidoId)}
-                onSuccess={handleAgendamentoSuccess} // ✅ Apenas callback de sucesso
-                onError={handleAgendamentoError}     // ✅ Callback de erro
+                onSuccess={handleAgendamentoSuccess}
+                onError={handleAgendamentoError}
                 onCancel={() => {
                   setShowAgendamento(false)
                   setServicoSelecionado(null)

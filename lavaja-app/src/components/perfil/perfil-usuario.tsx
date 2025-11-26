@@ -70,10 +70,10 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
         setUsuario(response.data)
         setFormData(response.data)
 
-        console.log('✅ Perfil carregado com sucesso:', response.data)
+        console.log('Perfil carregado com sucesso:', response.data)
 
       } catch (error: any) {
-        console.error('❌ Erro ao carregar perfil:', error)
+        console.error('Erro ao carregar perfil:', error)
         
         if (error.response?.status === 401 || error.response?.status === 403) {
           setError('Sessão expirada. Faça login novamente.')
@@ -142,14 +142,12 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
 
       console.log('💾 Salvando alterações do perfil:', formData)
 
-      // 🔥 PREPARA OS DADOS PARA ENVIAR - CONFORME DTO
       const dadosParaEnviar: any = {
         nome: formData.nome,
         email: formData.email,
         senhaAtual: senhaAtual
       }
 
-      // 🔥 SE TEM NOVA SENHA, ADICIONA COMO novaSenha
       if (novaSenha) {
         dadosParaEnviar.novaSenha = novaSenha
       }
@@ -158,14 +156,13 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
 
       // Faz a requisição PUT para atualizar o usuário
       const response = await httpClient.put(`/api/usuarios/${usuario.id}`, dadosParaEnviar)
-      
-      console.log('✅ Perfil atualizado com sucesso:', response.data)
+    
+      console.log('Perfil atualizado com sucesso:', response.data)
       
       setUsuario(response.data)
-      setFormData(response.data) // 🔥 ATUALIZA O formData TAMBÉM!
+      setFormData(response.data)
       setEditando(false)
       
-      // 🔥 CORREÇÃO: Limpa COMPLETAMENTE os campos de senha
       setSenhaAtual('')
       setNovaSenha('')
       setConfirmarSenha('')
@@ -173,7 +170,7 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
       alert('Perfil atualizado com sucesso!')
 
     } catch (error: any) {
-      console.error('❌ Erro ao atualizar perfil:', error)
+      console.error('Erro ao atualizar perfil:', error)
       
       if (error.response?.data) {
         const errorMessage = error.response.data.message || error.response.data
@@ -193,7 +190,6 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
     }
   }
 
-  // 🔥 NOVAS FUNÇÕES PARA DELETAR CONTA
   const abrirModalDeletar = () => {
     setModalDeletarAberto(true)
     setConfirmacaoDeletar('')
@@ -226,10 +222,7 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
 
       console.log('🗑️ Iniciando exclusão da conta...')
 
-      // 🔥 CHAMA A API PARA DELETAR A CONTA
-      // Supondo que sua API aceite DELETE em /api/usuarios/{id}
-      // e precise da senha para confirmar
-      await httpClient.delete(`/api/usuarios/${usuario.id}`, {
+     await httpClient.delete(`/api/usuarios/${usuario.id}`, {
         data: {
           senha: senhaDeletar
         }
@@ -237,18 +230,16 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
 
       console.log('✅ Conta deletada com sucesso')
 
-      // 🔥 LIMPA OS DADOS DO LOCALSTORAGE
       localStorage.removeItem('usuarioId')
       localStorage.removeItem('token') // se você armazena token
       localStorage.removeItem('userData') // se você armazena outros dados
 
       alert('Sua conta foi deletada com sucesso. Sentiremos sua falta!')
 
-      // 🔥 REDIRECIONA PARA A PÁGINA INICIAL
       router.push('/')
 
     } catch (error: any) {
-      console.error('❌ Erro ao deletar conta:', error)
+      console.error('Erro ao deletar conta:', error)
       
       if (error.response?.data) {
         const errorMessage = error.response.data.message || error.response.data
@@ -418,7 +409,7 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
                       </div>
                     </div>
 
-                    {/* SEÇÃO DE SENHA - OBRIGATÓRIA NO MODO EDIÇÃO */}
+                    {/* SEÇÃO DE SENHA*/}
                     {editando && (
                       <div className="box">
                         <p className="subtitle is-6 has-text-grey mb-4">
@@ -494,7 +485,7 @@ export function PerfilUsuario({ usuarioId }: PerfilUsuarioProps) {
         </div>
       </div>
 
-      {/* 🔥 MODAL PARA CONFIRMAR EXCLUSÃO DA CONTA */}
+      {/*MODAL PARA CONFIRMAR EXCLUSÃO DA CONTA */}
       {modalDeletarAberto && (
         <div className="modal is-active">
           <div className="modal-background" onClick={fecharModalDeletar}></div>
