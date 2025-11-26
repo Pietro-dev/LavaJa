@@ -1,6 +1,6 @@
 package io.github.pietro_dev.lavajaapi.model.repository;
 
-import io.github.pietro_dev.lavajaapi.model.Agendamento;
+import io.github.pietro_dev.lavajaapi.model.entity.Agendamento;
 import io.github.pietro_dev.lavajaapi.model.repository.projections.AgendamentoPorDia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

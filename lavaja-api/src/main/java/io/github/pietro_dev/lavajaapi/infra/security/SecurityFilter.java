@@ -1,6 +1,6 @@
 package io.github.pietro_dev.lavajaapi.infra.security;
 
-import io.github.pietro_dev.lavajaapi.model.UsuarioRole;
+import io.github.pietro_dev.lavajaapi.model.entity.UsuarioRole;
 import io.github.pietro_dev.lavajaapi.model.repository.LavaRapidoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.UsuarioRepository;
 import jakarta.servlet.FilterChain;

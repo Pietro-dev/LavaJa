@@ -1,7 +1,7 @@
 package io.github.pietro_dev.lavajaapi.config;
 
-import io.github.pietro_dev.lavajaapi.model.Usuario;
-import io.github.pietro_dev.lavajaapi.model.UsuarioRole;
+import io.github.pietro_dev.lavajaapi.model.entity.Usuario;
+import io.github.pietro_dev.lavajaapi.model.entity.UsuarioRole;
 import io.github.pietro_dev.lavajaapi.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

@@ -1,24 +1,20 @@
 package io.github.pietro_dev.lavajaapi.services;
 
-import io.github.pietro_dev.lavajaapi.model.Agendamento;
-import io.github.pietro_dev.lavajaapi.model.Servico;
-import io.github.pietro_dev.lavajaapi.model.Status;
-import io.github.pietro_dev.lavajaapi.model.Usuario;
+import io.github.pietro_dev.lavajaapi.model.entity.Agendamento;
+import io.github.pietro_dev.lavajaapi.model.entity.Servico;
+import io.github.pietro_dev.lavajaapi.model.entity.Status;
+import io.github.pietro_dev.lavajaapi.model.entity.Usuario;
 import io.github.pietro_dev.lavajaapi.model.repository.AgendamentoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.ServicoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.UsuarioRepository;
-import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoAtualizarStatusDTO;
-import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoRequestDTO;
-import io.github.pietro_dev.lavajaapi.rest.agendamentos.AgendamentoResponseDTO;
+import io.github.pietro_dev.lavajaapi.dtos.agendamentos.AgendamentoAtualizarStatusDTO;
+import io.github.pietro_dev.lavajaapi.dtos.agendamentos.AgendamentoRequestDTO;
+import io.github.pietro_dev.lavajaapi.dtos.agendamentos.AgendamentoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AgendamentoService {

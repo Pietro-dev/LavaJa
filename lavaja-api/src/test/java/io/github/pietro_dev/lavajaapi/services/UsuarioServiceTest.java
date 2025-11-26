@@ -1,9 +1,9 @@
 package io.github.pietro_dev.lavajaapi.services;
 
-import io.github.pietro_dev.lavajaapi.model.Usuario;
+import io.github.pietro_dev.lavajaapi.model.entity.Usuario;
 import io.github.pietro_dev.lavajaapi.model.repository.UsuarioRepository;
-import io.github.pietro_dev.lavajaapi.rest.usuarios.UsuarioFormRequest;
-import io.github.pietro_dev.lavajaapi.rest.usuarios.UsuarioUpdateRequest;
+import io.github.pietro_dev.lavajaapi.dtos.usuarios.UsuarioFormRequest;
+import io.github.pietro_dev.lavajaapi.dtos.usuarios.UsuarioUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

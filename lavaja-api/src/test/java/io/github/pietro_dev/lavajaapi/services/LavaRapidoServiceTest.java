@@ -1,10 +1,10 @@
 package io.github.pietro_dev.lavajaapi.services;
 
-import io.github.pietro_dev.lavajaapi.model.LavaRapido;
-import io.github.pietro_dev.lavajaapi.model.Servico;
+import io.github.pietro_dev.lavajaapi.model.entity.LavaRapido;
+import io.github.pietro_dev.lavajaapi.model.entity.Servico;
 import io.github.pietro_dev.lavajaapi.model.repository.LavaRapidoRepository;
-import io.github.pietro_dev.lavajaapi.rest.lavarapidos.LavaRapidoResponseDTO;
-import io.github.pietro_dev.lavajaapi.rest.servicos.ServicoResponseDTO;
+import io.github.pietro_dev.lavajaapi.dtos.lavarapidos.LavaRapidoResponseDTO;
+import io.github.pietro_dev.lavajaapi.dtos.servicos.ServicoResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

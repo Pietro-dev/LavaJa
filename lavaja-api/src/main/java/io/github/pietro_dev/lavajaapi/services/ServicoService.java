@@ -1,11 +1,11 @@
 package io.github.pietro_dev.lavajaapi.services;
 
-import io.github.pietro_dev.lavajaapi.model.LavaRapido;
-import io.github.pietro_dev.lavajaapi.model.Servico;
+import io.github.pietro_dev.lavajaapi.model.entity.LavaRapido;
+import io.github.pietro_dev.lavajaapi.model.entity.Servico;
 import io.github.pietro_dev.lavajaapi.model.repository.LavaRapidoRepository;
 import io.github.pietro_dev.lavajaapi.model.repository.ServicoRepository;
-import io.github.pietro_dev.lavajaapi.rest.servicos.ServicoFormRequest;
-import io.github.pietro_dev.lavajaapi.rest.servicos.ServicoListDTO;
+import io.github.pietro_dev.lavajaapi.dtos.servicos.ServicoFormRequest;
+import io.github.pietro_dev.lavajaapi.dtos.servicos.ServicoListDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

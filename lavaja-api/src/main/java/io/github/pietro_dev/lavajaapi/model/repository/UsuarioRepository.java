@@ -1,6 +1,6 @@
 package io.github.pietro_dev.lavajaapi.model.repository;
 
-import io.github.pietro_dev.lavajaapi.model.Usuario;
+import io.github.pietro_dev.lavajaapi.model.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -1,0 +1,70 @@
+package io.github.pietro_dev.lavajaapi.dtos.agendamentos;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.pietro_dev.lavajaapi.model.entity.Agendamento;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Data
+@AllArgsConstructor
+public class AgendamentoResponseDTO {
+    private Long id;
+//    private Long servicoId;
+//    private Long lavaRapidoId;
+//    private Long usuarioId;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime inicio;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime fim;
+    private Integer duracaoMinutos;
+    private BigDecimal valor;
+    private String status;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataCriacao;
+
+    private String servicoNome;
+    private String lavaRapidoNome;
+    private String usuarioNome;
+    private Long usuarioId;
+    private Long servicoId;
+    private Long lavaRapidoId;
+
+    public AgendamentoResponseDTO(Agendamento ag) {
+        this.id = ag.getId();
+//        this.servicoId = ag.getServico() != null ? ag.getServico().getId() : null;
+//        this.lavaRapidoId = ag.getLavaRapido() != null ? ag.getLavaRapido().getId() : null;
+//        this.usuarioId = ag.getUsuario() != null ? ag.getUsuario().getId() : null;
+
+        this.servicoNome = ag.getServico() != null ? ag.getServico().getServico() : null;
+        this.lavaRapidoNome = ag.getLavaRapido() != null ? ag.getLavaRapido().getRazaoSocial() : null;
+        this.usuarioNome = ag.getUsuario() != null ? ag.getUsuario().getNome() : null;
+
+        this.inicio = ag.getHoraInicio();
+        this.fim = ag.getHoraFim();
+        this.duracaoMinutos = ag.getDuracaoMinutos();
+        this.valor = ag.getValor();
+        this.status = ag.getStatus() != null ? ag.getStatus().name() : null;
+        this.dataCriacao = ag.getDataCriacao();
+        this.usuarioId = ag.getUsuario().getId();
+        this.lavaRapidoId = ag.getLavaRapido().getId();
+        this.servicoId = ag.getServico().getId();
+    }
+
+    public AgendamentoResponseDTO( LocalDateTime inicio, LocalDateTime fim, Integer duracaoMinutos, BigDecimal valor, String status) {
+//        this.servicoId = servicoId;
+//        this.lavaRapidoId = lavaRapidoId;
+//        this.usuarioId = usuarioId;
+        this.inicio = inicio;
+        this.fim = fim;
+        this.duracaoMinutos = duracaoMinutos;
+        this.valor = valor;
+        this.status = status;
+    }
+
+    public AgendamentoResponseDTO() {
+    }
+}
