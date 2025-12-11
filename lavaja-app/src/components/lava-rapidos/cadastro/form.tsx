@@ -79,8 +79,8 @@ export const LavaRapidoForm: React.FC<LavaRapidoFormProps> = ({
         validationSchema: lavaRapido.id ? validationSchemaEdicao : validationSchemaCadastro
     })
 
-    console.log('🔍 Erros do Formik:', formik.errors)
-    console.log('📝 Valores do Formik:', formik.values)
+    console.log(' Erros do Formik:', formik.errors)
+    console.log('Valores do Formik:', formik.values)
 
     return (
         <form onSubmit={formik.handleSubmit}>
