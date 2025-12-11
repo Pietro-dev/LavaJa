@@ -26,7 +26,7 @@ export const LoginLavaRapidoForm: React.FC = () => {
 
     useEffect(() => {
         setIsClient(true)
-        console.log('🔄 LoginLavaRapidoForm - Componente montado')
+        console.log('LoginLavaRapidoForm - Componente montado')
     }, [])
 
     const handleSubmit = async (values: LoginLavaRapidoFormValues) => {
@@ -51,9 +51,9 @@ export const LoginLavaRapidoForm: React.FC = () => {
             if (lavaRapidoId) {
                 localStorage.setItem('lavaRapidoId', lavaRapidoId.toString())
                 localStorage.setItem('userType', 'LAVA_RAPIDO')
-                console.log('🏪 Lava Rápido ID salvo:', lavaRapidoId)
+                console.log('Lava Rápido ID salvo:', lavaRapidoId)
             } else {
-                console.warn('⚠️ Lava Rápido ID não encontrado na resposta')
+                console.warn('Lava Rápido ID não encontrado na resposta')
             }
         }
 

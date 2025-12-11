@@ -35,7 +35,6 @@ public class DataInitializer implements CommandLineRunner {
             Usuario usuario = usuarioOptional.get();
             usuario.setRole(UsuarioRole.ADMIN);
             usuarioRepository.save(usuario);
-            System.out.println("Usuário com ID 1 atualizado para ADMIN");
         } else {
             // Usuário não existe, cria novo admin
             Usuario novoAdmin = new Usuario();

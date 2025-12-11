@@ -16,7 +16,7 @@ export const Menu:React.FC = ()=>{
         const usuarioId = localStorage.getItem('usuarioId')
         const lavaRapidoId = localStorage.getItem('lavaRapidoId')
     
-        if (usuarioId === '1') {
+        if (usuarioId === '1' && !lavaRapidoId) {
             console.log('Usuário detectado: ADMIN')
             setUserType('ADMIN')
         } else if (lavaRapidoId) {
@@ -34,6 +34,7 @@ export const Menu:React.FC = ()=>{
     }, [])
 
     const handleLogout = () => {
+        localStorage.clear()
         logout()
         router.push("/login")
     }
